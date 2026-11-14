@@ -1425,3 +1425,20 @@ textarea:focus::placeholder {
   outline: 2px solid var(--brass);
   outline-offset: 2px;
 }
+
+/* ==== footer GitHub link ==== */
+:root .wrap > .foot .ghlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  text-decoration: none;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+:root .wrap > .foot .ghlink:hover {
+  color: var(--ink);
+}
+:root .wrap > .foot .ghlink + #fxBtn {
+  margin-left: 0;
+}
