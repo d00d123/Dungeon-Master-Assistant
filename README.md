@@ -1,5 +1,6 @@
 # DM Assistance Board
 
+
 A Dungeon Master's screen that lives in one web page. DM Assistance Board keeps the party, the live battle, dice, a 5e (2024 rules) bestiary, missions, notes, and in-game time and light together on one paper-cut storybook board. You can run a whole session from it without switching tabs. It is a static site (`index.html` plus plain CSS and JavaScript files) with no build step, no accounts and no server. Your campaign stays in your own browser.
 
 **[Try it live →](https://d00d123.github.io/Dungeon-Master-Assistant/)**
@@ -34,22 +35,6 @@ A Dungeon Master's screen that lives in one web page. DM Assistance Board keeps 
 - **Paper-cut look, light and dark.** Paper panels, cut-paper edges and a static storybook diorama for the table. The theme follows the device setting or your choice. A short animated entry screen, with small effects for crits, big hits and turns that you can turn off. Reduced motion is respected.
 - **Light on your device.** Effects are off by default on phones, tablets and low-power computers (you can turn them on). In headless Chromium on a desktop with Effects on, an idle board now uses about 0.1 % CPU during a battle (previously 9–19 %) and about 4 % with the campfire flickering between battles (previously 97 %); start-up style work dropped from about 370 ms to 120 ms. Large reference data loads only when you first need it.
 - **Works on a phone or tablet.** The layout adapts down to 360 px wide.
-
-| Entry | Home (dark) |
-|---|---|
-| ![Entry screen](docs/screenshots/entry.png) | ![Home screen, dark](docs/screenshots/home-dark.png) |
-| **Live battle** | **Dice roll** |
-| ![Live battle](docs/screenshots/battle.png) | ![Dice roller](docs/screenshots/dice.png) |
-
-<img src="docs/screenshots/phone.png" alt="Phone layout" width="300">
-
-## How to run
-
-- **Locally:** download or clone the repo and open `index.html` in a current browser (Chrome, Edge, Firefox or Safari). Keep the `css/`, `js/`, `data/` and `fonts/` folders next to `index.html`.
-- **GitHub Pages:**
-  1. Go to *Settings → Pages → Deploy from a branch*.
-  2. Choose `main` and `/ (root)`.
-  3. The board is then served at `https://<user>.github.io/<repo>/`.
 
 No install, build or dependencies.
 
@@ -91,37 +76,6 @@ The monster statistics, spells, magic items and conditions come from the SRD 5.2
 - [Alegreya](https://github.com/huertatipografica/Alegreya) and [Alegreya Sans](https://github.com/huertatipografica/Alegreya-Sans) by Huerta Tipográfica.
 - [Cinzel](https://github.com/NDISCOVER/Cinzel) by Natanael Gama.
 
-The illustrations (entry screen, table diorama, dice faces, icons) are original inline SVG made for this project.
-
-See [NOTICE.md](NOTICE.md) for the full third-party notices.
-
-## Project structure
-
-```
-index.html     the page shell (markup, CSP, stylesheet and script tags)
-css/           base, intro, components, table, dice, effects, time-light (cascade order)
-js/            storage-shim, theme, effects, lazy-data, app, motion, table-ui, backup
-data/          rules and demo (start-up); bestiary, spells, items (loaded on first use)
-fonts/         bundled WOFF2 fonts and their licences
-tests/         Playwright test scripts (development only, not needed to run the board)
-docs/          ARCHITECTURE.md and the screenshots
-```
-
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) has the module map, load order, storage keys, data flow, data safety and how the effects hook in.
-
-## Running the tests
-
-The board itself needs nothing installed. The tests are development tooling: Node 18+, `npm install` once (ESLint, Prettier), and Playwright with Chromium already available.
-
-```
-npm test                    # smoke test: core features, no console errors, CSP, no horizontal scroll
-npm run test:visual         # 13 key screens against tests/baseline/
-node tests/data-safety.js   # recovery, quota, reminders, undo after reload, backup file
-node tests/perf.js          # start-up, idle CPU, frame rate, Effects default
-npm run lint && npm run format:check
-```
-
-See [tests/README.md](tests/README.md) for the screen sweep and the other scripts.
 
 ## Built with
 
