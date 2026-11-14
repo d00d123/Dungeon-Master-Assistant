@@ -85,8 +85,9 @@
       phase = 'ask',
       tmr = [],
       L = [];
-    /* The animated d20 plays on every load (new tab, reload, back/forward). Only reduced motion and Effects Off get the short fade. */
-    const isStatic = () => RM || off;
+    /* The animated d20 plays on every load (new tab, reload, back/forward), whatever the Effects setting.
+       Only the OS Reduce Motion setting gets the still version with a short fade. */
+    const isStatic = () => RM;
     const P = {
       H0: [100, 12],
       H1: [176.2, 56],

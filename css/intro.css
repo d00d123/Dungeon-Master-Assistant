@@ -583,7 +583,7 @@ html.fx-intro-on .toast {
   }
 }
 /* static: reduced motion, Effects off, reload */
-:is(#fx-intro.fx-static, html.fx-rm #fx-intro, html.fx-off #fx-intro) :is(.fx-fl, .fx-fl > *, .fx-pen) {
+:is(#fx-intro.fx-static, html.fx-rm #fx-intro) :is(.fx-fl, .fx-fl > *, .fx-pen) {
   animation: none !important;
 }
 html.fx-paused #fx-intro :is(.fx-fl, .fx-fl > *, .fx-pen) {
