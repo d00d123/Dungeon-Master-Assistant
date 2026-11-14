@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DM Board">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; style-src-elem 'self' file:; style-src-attr 'unsafe-inline'; font-src 'self' file:; img-src 'self' data: blob:; connect-src https://character-service.dndbeyond.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>DM Assistance Board</title>
+<meta name="description" content="A single-page, offline-first Dungeon Master dashboard for 5e (2024 rules): party, battles, dice, bestiary, time and light.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 29 9.5v13L16 30 3 22.5v-13z' fill='%237a3326'/%3E%3Cpath d='M16 8 23 20H9z' fill='none' stroke='%23f3e8cf' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/intro.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/table.css">
+<link rel="stylesheet" href="css/dice.css">
+<link rel="stylesheet" href="css/effects.css">
+<link rel="stylesheet" href="css/time-light.css">
+<link rel="stylesheet" href="css/campaign-wizard.css">
+<link rel="stylesheet" href="css/campaign-switcher.css">
+<script src="js/storage-shim.js"></script>
+<script src="js/theme.js"></script>
+<script defer src="data/rules.js"></script>
+<script defer src="data/demo.js"></script>
+<script defer src="js/lazy-data.js"></script>
+<script defer src="js/app.js"></script>
+<script defer src="js/motion.js"></script>
+<script defer src="js/table-ui.js"></script>
+<script defer src="js/backup.js"></script>
+<script defer src="js/campaign-wizard.js"></script>
+<script defer src="js/campaign-switcher.js"></script>
+</head>
+
+<body>
+
+<script src="js/effects.js"></script>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M20 3 35 11.5v17L20 37 5 28.5v-17z"/><path d="M20 3 12 16h16zM12 16 5 28.5M28 16l7 12.5M12 16l8 21 8-21M5 28.5h30M20 37 12 16"/></svg>
+      <div>
+        <h1>DM Assistance Board</h1>
+        <div class="sub" id="subline">5e, 2024 rules</div>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <button class="navb" type="button" data-open="battle"><span>Battles</span><small id="bCount"></small></button>
+      <button class="navb" type="button" data-open="mission"><span>Missions</span><small id="mCount"></small></button>
+      <button class="navb" type="button" data-open="notes"><span>Notes</span><small id="nCount"></small></button>
+      <button class="navb" type="button" data-dice><span>Dice</span></button>
+    </nav>
+    <div class="tools">
+      <button class="btn sm ghost" id="jotBtn" type="button" title="Jot a quick note into tonight’s log (J)">Quick note</button>
+      <button class="btn sm ghost" id="skBtn" type="button" title="Draw on the sketchpad (S)">Sketch</button>
+      <button class="btn sm ghost themebtn" id="themeBtn" type="button" aria-label="Theme"></button>
+      <button class="btn sm ghost" id="exportBtn" type="button">Save backup</button>
+      <button class="btn sm ghost" id="importBtn" type="button">Load backup</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+  </header>
+
+  <main class="home">
+    <section class="partycol" aria-label="Players">
+      <div class="sechead"><h2>Party</h2><p class="tstate" id="tstate"></p></div>
+      <div class="party" id="party"></div>
+    </section>
+    <aside class="side-col" aria-label="Dungeon Master"><div id="dmSeat"></div></aside>
+  </main>
+
+  <footer class="foot">
+    <span id="exampleNote"></span>
+    <span>Saved in this browser. Use Save backup to keep a copy.</span>
+    <span>Unofficial fan content. Not affiliated with Wizards of the Coast. Includes SRD 5.2.1 material (CC-BY-4.0).</span>
+  </footer>
+</div>
+
+<div id="overlay"></div>
+
+</body></html>

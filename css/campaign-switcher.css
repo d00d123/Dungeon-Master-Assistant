@@ -1,0 +1,274 @@
+/* Header campaign switcher + demo "start your own" banner. Owned by js/campaign-switcher.js. */
+/* Paper-cut tokens only (components.css), so light/dark follow the theme automatically. */
+
+/* ---------- header switcher: #subline wrapped in a button ---------- */
+:root .brand .csw-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  margin: 0 0 0 -4px;
+  padding: 1px 4px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+:root .brand .csw-btn > .sub {
+  min-width: 0;
+}
+:root .brand .csw-btn:hover,
+:root .brand .csw-btn[aria-expanded='true'] {
+  background: var(--tint);
+}
+:root .brand .csw-btn:hover > .sub {
+  color: var(--ink-2);
+}
+:root .csw-caret {
+  flex: none;
+  display: block;
+  width: 10px;
+  height: 10px;
+  color: var(--ink-3);
+  transition: rotate 0.15s;
+}
+:root .csw-btn[aria-expanded='true'] > .csw-caret {
+  rotate: 180deg;
+}
+
+/* ---------- the paper menu ---------- */
+:root .csw-menu {
+  position: absolute;
+  z-index: 55;
+  box-sizing: border-box;
+  max-height: min(420px, calc(100vh - 90px));
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--pc-cut);
+  border-radius: var(--r);
+  background: var(--pc-paper), var(--surface);
+  box-shadow: var(--pc-lift-3);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+:root .csw-menu[hidden] {
+  display: none;
+}
+:root .csw-head {
+  padding: 4px 10px 6px;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+:root .csw-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14.5px;
+  text-align: left;
+  cursor: pointer;
+}
+:root .csw-item:hover,
+:root .csw-item:focus-visible {
+  background: var(--tint-2);
+}
+:root .csw-item:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: -2px;
+}
+:root .csw-tick {
+  flex: none;
+  width: 14px;
+  color: var(--brass);
+  font-weight: 700;
+}
+:root .csw-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:root .csw-camp.is-current {
+  font-weight: 700;
+}
+:root .csw-act {
+  color: var(--brass);
+  padding-left: 32px;
+}
+:root .csw-sep {
+  height: 1px;
+  margin: 6px 4px;
+  background: var(--line);
+}
+:root .csw-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- demo banner: card stock above the DM screen (before main.home, so nothing overlaps) ---------- */
+:root .csw-demo {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  box-sizing: border-box;
+  width: min(100%, 1040px);
+  margin: 0 auto 6px;
+  padding: 10px 14px 10px 26px;
+  border: 1px solid var(--pc-cut);
+  border-radius: var(--r);
+  background: var(--pc-paper), var(--surface);
+  box-shadow: var(--pc-lift-2);
+}
+:root .csw-demo[hidden] {
+  display: none;
+}
+/* a brass bookmark, not the red live-battle ribbon */
+:root .csw-demo::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: -1px;
+  width: 10px;
+  height: 22px;
+  background: var(--brass);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+:root .csw-demo-txt {
+  flex: 1 1 260px;
+  min-width: 0;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 14.5px;
+}
+:root .csw-demo-txt b {
+  color: var(--ink);
+}
+:root .csw-demo-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  :root .csw-demo {
+    width: calc(100% - 48px);
+  }
+}
+@media (max-width: 767px) {
+  :root .csw-demo {
+    margin-bottom: 4px;
+    padding: 10px 12px 10px 24px;
+  }
+  :root .csw-demo-acts {
+    width: 100%;
+  }
+  :root .csw-demo-acts > .btn {
+    flex: 1 1 auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root .csw-caret {
+    transition: none;
+  }
+}
+@media print {
+  :root .csw-demo,
+  :root .csw-menu,
+  :root .csw-caret {
+    display: none;
+  }
+}
+
+/* ---------- header: title hidden, campaign switcher as a box matching the nav ---------- */
+/* The h1 stays for screen readers and the document outline; it is only hidden visually. */
+:root .brand h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:root .brand .csw-btn {
+  box-sizing: border-box;
+  min-height: var(--csw-h, 44px);
+  margin: 0;
+  padding: 0 14px 0 16px;
+  gap: 10px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  box-shadow:
+    inset 0 0 0 1px var(--pc-cut),
+    0 2px 0 var(--pc-cut-2);
+}
+:root .brand .csw-btn > .sub {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:root .brand .csw-btn:hover,
+:root .brand .csw-btn[aria-expanded='true'] {
+  background: var(--surface);
+}
+:root .brand .csw-btn:hover > .sub {
+  color: var(--ink);
+}
+:root .brand .csw-caret {
+  width: 12px;
+  height: 12px;
+  color: var(--ink-2);
+}
+:root .brand {
+  --csw-h: 38px;
+  min-width: 0;
+  max-width: 100%;
+}
+:root .brand > div {
+  min-width: 0;
+  max-width: 100%;
+}
+:root .brand .csw-btn {
+  max-width: 100%;
+}
+/* keep the whole header on one row at desktop widths: long names truncate (full name in the tooltip) */
+:root .brand .csw-btn {
+  max-width: 292px;
+  padding: 0 11px 0 14px;
+  gap: 8px;
+}
+:root .brand .csw-btn > .sub {
+  font-size: 14.5px;
+}
+@media (max-width: 1179px) {
+  :root .brand .csw-btn {
+    max-width: 420px;
+  }
+}
+@media (max-width: 720px) {
+  :root .brand .csw-btn {
+    max-width: calc(100vw - 92px);
+  }
+}

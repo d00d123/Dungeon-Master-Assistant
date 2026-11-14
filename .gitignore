@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows / Linux
+Thumbs.db
+Desktop.ini
+*~
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Personal campaign backups and imports (keep your table's data out of the repo)
+dm-board-*.json
+bestiary*.json
+*.local.html
+
+# Tooling
+node_modules/
+__pycache__/
+tests/output/

@@ -1,0 +1,6 @@
+# Data files are generated with one record per line; keep them as they are.
+data/
+node_modules/
+tests/baseline/
+tests/output/
+fonts/

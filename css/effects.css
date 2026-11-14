@@ -1,0 +1,73 @@
+/* Effects (non-intro): persistent and transient cues, the Effects button. Driven by js/effects.js. */
+
+/* ==== fx-css ==== */
+/* Effects (non-intro): persistent and transient cues, the Effects button. No ambient layer (aurora and particles
+   were removed in v3). The only loops left are the campfire in the table art (css/table.css, Efire) and torch
+   guttering; both stop with Effects off or reduced motion, and pause while a sheet, popup or the Time & light
+   drawer covers the table (html.fx-hold) or the tab is hidden (html.fx-paused). */
+/* transient cue layer */
+#fx-top {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  contain: strict;
+  overflow: hidden;
+}
+#fx-top > *,
+#fx-top > i > i {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+#fx-top svg {
+  overflow: visible;
+}
+:root.fx-off #fx-top {
+  display: none;
+}
+#fxBtn {
+  margin-left: auto;
+}
+#fxBtn + #helpBtn {
+  margin-left: -6px;
+}
+/* The current turn (paper strip + bookmark), low HP (seat ribbon) and concentration (stitched outline) are static
+   paper marks in components.css, the same with Effects on or off: no glow, no pulse, no shimmer loops. */
+/* torch guttering: <= 2 steps/s, <= 20% */
+@keyframes fx-gutter {
+  0% {
+    opacity: 1;
+  }
+  17% {
+    opacity: 0.84;
+  }
+  23% {
+    opacity: 1;
+  }
+  61% {
+    opacity: 0.8;
+  }
+  68% {
+    opacity: 0.95;
+  }
+}
+:root:not(.fx-off) .light.low > i {
+  animation: fx-gutter 3.1s steps(1) infinite;
+}
+/* Off / paused */
+:root.fx-off .dres.n20.spinning {
+  animation: none !important;
+}
+:root.fx-paused .light.low > i {
+  animation-play-state: paused !important;
+}
+:root.fx-hold #dmSeat .light.low > i {
+  animation-play-state: paused !important;
+}
+@media (forced-colors: active), print {
+  #fx-top {
+    display: none;
+  }
+}

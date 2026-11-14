@@ -1,0 +1,23 @@
+{
+  "name": "dm-assistance-board",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Offline-first Dungeon Master dashboard for 5e (2024 rules). No build step: open index.html.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/smoke.js",
+    "test:visual": "node tests/visual.js",
+    "test:visual:update": "node tests/visual.js --update",
+    "test:coverage": "node tests/coverage.js",
+    "lint": "eslint .",
+    "format": "prettier --write \"js/**/*.js\" \"css/**/*.css\" \"tests/**/*.js\" eslint.config.js",
+    "format:check": "prettier --check \"js/**/*.js\" \"css/**/*.css\" \"tests/**/*.js\" eslint.config.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "postcss": "^8.5.32",
+    "prettier": "^3.9.10"
+  }
+}

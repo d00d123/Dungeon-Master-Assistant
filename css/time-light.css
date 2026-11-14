@@ -1,0 +1,151 @@
+/* Time & light drawer on the DM screen. Driven by js/table-ui.js. */
+
+/* ==== tl-css ==== */
+/* Time & light. The Time and Delve leaves stay off the home screen; one button on the Session leaf opens them
+   as a drawer (#dmSeat itself becomes the fixed drawer, so the app's own panels, ids and handlers are untouched). */
+#dmSeat .tl-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+#dmSeat .tl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+}
+#dmSeat .tl-btn svg {
+  flex: none;
+}
+#dmSeat .tl-btn small {
+  color: var(--ink-3);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+#dmSeat > .tl-head {
+  display: none;
+}
+#tlScrim {
+  position: fixed;
+  inset: 0;
+  z-index: 18;
+  background: var(--scrim, rgba(0, 0, 0, 0.45));
+  display: none;
+}
+:root.tl-on #tlScrim {
+  display: block;
+}
+:root #dmSeat.tl-open {
+  position: fixed !important;
+  z-index: 19;
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+  left: auto;
+  margin: 0 !important;
+  width: min(420px, calc(100vw - 24px)) !important;
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  display: flex !important;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 0 2px;
+  scrollbar-width: thin;
+  scroll-snap-type: none !important;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 14px 18px var(--pc-sh));
+}
+#dmSeat.tl-open > .panel:first-child {
+  display: none !important;
+}
+:root #dmSeat.tl-open > .panel:nth-child(2),
+:root #dmSeat.tl-open > .panel:nth-child(3),
+:root #dmSeat.tl-open > .panel:nth-child(2),
+:root #dmSeat.tl-open > .panel:nth-child(3) {
+  display: block !important;
+  flex: none;
+  grid-row: auto !important;
+}
+:root #dmSeat.tl-open > .panel::before,
+:root #dmSeat.tl-open > .panel::after {
+  display: none;
+}
+#dmSeat.tl-open > .tl-head {
+  order: -1;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 8px 8px 16px;
+  border: 7px solid transparent;
+  border-radius: 12px;
+  color: var(--ink);
+  background-image:
+    linear-gradient(var(--surface), var(--surface)), none, linear-gradient(var(--tbl-leaf), var(--tbl-leaf));
+  background-clip: padding-box, border-box, border-box;
+  background-origin: padding-box, border-box, border-box;
+  box-shadow:
+    inset 0 0 0 1px var(--tbl-leaf-2),
+    0 3px 0 var(--tbl-leaf-2);
+}
+#dmSeat .tl-head h2 {
+  margin: 0;
+  font:
+    600 17px/1.2 'Cinzel',
+    Georgia,
+    serif;
+  letter-spacing: 0.04em;
+}
+#dmSeat .tl-head .tl-x {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+#dmSeat .tl-head .tl-x:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+@media (max-width: 600px) {
+  :root #dmSeat.tl-open {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto !important;
+    max-height: 88vh;
+    max-height: 88dvh;
+    padding: 0 6px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.fx-off) #dmSeat.tl-open {
+    animation: tl-in 0.18s ease-out;
+  }
+}
+@keyframes tl-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+@media print {
+  #tlScrim,
+  #dmSeat > .tl-head,
+  #dmSeat .tl-row {
+    display: none !important;
+  }
+}

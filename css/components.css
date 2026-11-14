@@ -1,0 +1,1427 @@
+/* Component polish layered over base.css: scene pills, dice/popup tweaks, visual-enhancement layer (panels, cards, sheets, buttons). */
+
+/* ==== sl-css ==== */
+.sl-pills {
+  gap: 4px;
+  margin-top: 6px;
+}
+.scenenow .sl-home {
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.sl-npc p {
+  margin: 0 0 8px;
+}
+.sl-npcs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.sl-npcs > span {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.sl-next p {
+  margin: 4px 0 8px;
+}
+
+/* ==== dp-css ==== */
+/* ==========================================================================
+   Design pass (v30): "Quiet instrument", finished. A CSS-only layer that
+   sits last in the page. No markup, ids, text or behaviour change.
+   D1 steady sheets      D2 no boxes in boxes     D3 placeholders read as hints
+   D4 mood-matched tags  D5 quiet action rows     D6 calm empty states
+   D7 tidy tables        D8 muted menu counts     D9 compact Getting started
+   ========================================================================== */
+
+/* Steady sheets: every sheet keeps one height, so switching tabs never
+   makes the bottom edge jump. Taller content still scrolls the page as before. */
+.ov .sheet {
+  min-height: min(820px, calc(100vh - 64px));
+}
+.ov .sheet > .main {
+  align-content: start;
+}
+
+/* No boxes in boxes. A box inside a box becomes a titled section with a
+   hairline above it, instead of a third nested border. */
+.box .box,
+.box .item {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 14px 0 0;
+}
+.box .box:first-child,
+.box .item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* Placeholders read as hints, never as typed values. */
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-3);
+  opacity: 0.62;
+  font-style: italic;
+}
+input:focus::placeholder,
+textarea:focus::placeholder {
+  opacity: 0.42;
+}
+
+/* Status colour for conditions, concentration, rarity and the "Secret" label. */
+
+/* Quiet action rows. The row of small buttons under each mission, NPC,
+   loot line and note rests in a softer ink and wakes on hover or focus.
+   Colour only (no opacity), so contrast stays readable and nothing moves.
+   Delete and Remove only turn red when you point at them. */
+.item .row.end .btn.ghost,
+.t td .lnk,
+.item .row.end .lnk {
+  color: var(--ink-3);
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+.item:hover .row.end .btn.ghost,
+.item:focus-within .row.end .btn.ghost,
+.t tr:hover td .lnk,
+.t tr:focus-within td .lnk,
+.item:hover .row.end .lnk,
+.item:focus-within .row.end .lnk {
+  color: var(--ink-2);
+}
+.item .row.end .btn.ghost:hover,
+.t td .lnk:hover {
+  color: var(--ink);
+}
+[data-mdel]:hover,
+[data-ndel]:hover,
+[data-del]:hover,
+.t td .lnk[data-rm]:hover {
+  color: var(--crit) !important;
+}
+.item .row.end {
+  gap: 2px;
+}
+.item .row.end [data-mdel] {
+  margin-left: 10px;
+}
+
+/* Calm empty states: a soft tinted panel instead of a dashed frame. */
+.empty {
+  border: 0;
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  color: var(--ink-3);
+}
+.add {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--line-2) 70%, transparent);
+}
+.add:hover {
+  border-style: solid;
+}
+
+/* Tidy tables: figures line up. */
+.t td,
+.t th {
+  font-variant-numeric: tabular-nums;
+}
+.t th {
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+}
+
+/* Menu counts are quiet; the selected tab and the live dot carry the colour. */
+:root .tab .count,
+:root .tab .count {
+  color: var(--ink-3);
+  font-weight: 500;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border-radius: 999px;
+  padding: 0 7px;
+  line-height: 18px;
+  font-size: 11.5px;
+}
+:root .tab[aria-selected='true'] .count {
+  color: var(--ink-2);
+}
+
+/* Getting started takes half the height: steps sit in two columns on a
+   laptop screen. */
+@media (min-width: 1100px) {
+  html .gs ol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    row-gap: 0;
+  }
+  html .gs li:nth-child(2) {
+    border-top: 0;
+  }
+}
+
+/* ==== ve-css ==== */
+/* ==========================================================================
+   Paper-cut storybook: the main UI is cut card stock that matches the table
+   diorama. Day = "storybook day" (oatmeal felt, sky), night = "candlelit night".
+   Flat matte stock, a 1px cut edge, a solid 2-5px "thickness" shadow and one
+   soft drop shadow (--pc-lift-*). No gloss, no glows: neon lives only on the
+   intro d20. Visual only: no ids, classes, markup or JS change.
+   ========================================================================== */
+
+/* ---------- tokens: light, "storybook day" (paper-cut, matches the table diorama) ---------- */
+:root {
+  color-scheme: light;
+  --bg: #efe6d2;
+  --bg-2: #f6efe0;
+  --surface: #fdf9f0;
+  --surface-2: #f4ecda;
+  --line: #e3d6ba;
+  --line-2: #c9b28a;
+  --ink: #2a2119;
+  --ink-2: #4a3e30;
+  --ink-3: #5f513f;
+  --brass: #2d5f9e;
+  --brass-2: #244e85;
+  --on-pri: #fdf9f0;
+  --tint: rgba(45, 95, 158, 0.08);
+  --tint-2: rgba(45, 95, 158, 0.16);
+  --good: #2b6b45;
+  --warn: #94510c;
+  --crit: #b03229;
+  --magic: #6c3f97;
+  --gold: #7a5a00;
+  --on-crit: #fff8ec;
+  --track: #e6dbc2;
+  --scrim: rgba(52, 36, 18, 0.4);
+  --hi: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --e1: var(--pc-lift-1);
+  --e2: var(--pc-lift-2);
+  --e3: var(--pc-lift-3);
+  --stripe-l: 0.56;
+  --sans: 'Alegreya Sans', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Alegreya', 'Lora', Georgia, 'Palatino Linotype', serif;
+  --display: 'Cinzel', 'Trajan Pro', 'Lora', Georgia, serif;
+  --r: 8px;
+  --r-sm: 6px;
+  --r-lg: 12px;
+  --gild: #b5871c;
+  --gild-ink: #7a5a00;
+  --wax: #c23a32;
+  --cur-fill: color-mix(in srgb, var(--pc-banner) 12%, var(--surface));
+  --th-page:
+    var(--grain), var(--fibers),
+    linear-gradient(180deg, color-mix(in srgb, var(--pc-sky) 55%, var(--bg)) 0, var(--bg) 560px);
+  --th-nav: var(--grain), var(--surface-2);
+  --th-side: var(--grain), var(--surface-2);
+  --th-tabsel: var(--surface);
+  --th-c1: var(--pc-dragon);
+  --th-c2: #c48a12;
+  --th-c3: var(--pc-forest);
+  --th-c4: var(--pc-lake);
+  --stone: #5d6675;
+  --pc-forest: #2f7a4c;
+  --pc-lake: #3f6fb8;
+  --pc-dragon: #c23a32;
+  --pc-banner: #f2b829;
+  --pc-stone: #8791a3;
+  --pc-sky: #cfe7f2;
+  --pc-tray: #d2ad78;
+  --pc-tray-2: #a8804d;
+  --pc-felt: #efe3c8;
+  --pc-cut: #dccaa6;
+  --pc-cut-2: #cdb58b;
+  --pc-sh: rgba(74, 48, 18, 0.22);
+  --pc-sh-2: rgba(74, 48, 18, 0.34);
+  --pc-lift-1: 0 1px 0 var(--pc-cut-2), 0 2px 4px -2px var(--pc-sh);
+  --pc-lift-2: 0 0 0 1px var(--pc-cut), 0 3px 0 var(--pc-cut-2), 0 12px 18px -12px var(--pc-sh-2);
+  --pc-lift-3: 0 0 0 1px var(--pc-cut), 0 4px 0 var(--pc-cut-2), 0 30px 46px -22px var(--pc-sh-2);
+  --pc-stack: 8px 8px 0 -1px var(--surface-2), 8px 8px 0 0 var(--pc-cut-2);
+  --pc-press: 0 2px 0 var(--pc-cut-2);
+  --pc-paper: var(--grain);
+  --pc-ribbon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 26'%3E%3Cpath d='M0 0h12v26l-6-5-6 5z' fill='%23c23a32'/%3E%3Cpath d='M0 0h12v2H0z' fill='%23000' opacity='.18'/%3E%3C/svg%3E");
+  --th-rule: linear-gradient(
+    90deg,
+    transparent,
+    rgba(154, 116, 32, 0.55) 18%,
+    rgba(154, 116, 32, 0.55) 82%,
+    transparent
+  );
+  /* ornaments, theme-independent masks */
+  --mask-compass: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.1'%3E%3Ccircle cx='32' cy='32' r='22'/%3E%3Ccircle cx='32' cy='32' r='19' stroke-width='.6'/%3E%3C/g%3E%3Cpath d='M32 4 36 28 32 32 28 28zM32 60 28 36 32 32 36 36zM4 32 28 28 32 32 28 36zM60 32 36 36 32 32 36 28z' fill='%23000'/%3E%3Cpath d='M32 32 44 20 38 32zM32 32 20 44 26 32zM32 32 44 44 32 38zM32 32 20 20 32 26z' fill='%23000' opacity='.55'/%3E%3C/svg%3E");
+  --mask-d4: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 4 37 34H3zM20 4v20M3 34l17-10 17 10' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-d6: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 35 11v18L20 37 5 29V11zM5 11l15 8 15-8M20 19v18' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-d8: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 35 20 20 37 5 20zM5 20h30M20 3l-6 17 6 17 6-17z' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-d10: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 36 17 20 37 4 17zM4 17l16 6 16-6M20 23v14M20 3l-7 15M20 3l7 15' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-d12: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 36 14.6 30 33.4H10L4 14.6zM20 10l7.6 5.5-2.9 8.9h-9.4l-2.9-8.9zM20 3v7M36 14.6l-8.4.9M30 33.4l-5.3-9M10 33.4l5.3-9M4 14.6l8.4.9' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-d20: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3 35 11.5v17L20 37 5 28.5v-17zM20 3 12 16h16zM12 16 5 28.5M28 16l7 12.5M12 16l8 21 8-21M5 28.5h30M5 11.5 12 16M35 11.5 28 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --mask-d100: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M12 5 21 15 12 35 3 15zM3 15l9 4 9-4M12 19v16M28 5 37 15 28 35 19 15zM19 15l9 4 9-4M28 19v16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");
+  /* ornaments, light colours baked in */
+  --seal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%238e1f22' d='M20 2.2c2.3 0 3.3 1.7 5.2 2.2s3.8-.3 5.2 1 1 3.3 2.1 4.9 3.1 2.3 3.5 4.2-.9 3.4-.9 5.4 1.4 3.3.9 5.2-2.5 2.6-3.5 4.3-.8 3.7-2.4 4.9-3.4.5-5.1 1.2-2.8 2.6-4.9 2.6-3.1-1.9-4.9-2.5-3.8.3-5.2-1-.8-3.3-1.9-4.9-3.1-2.4-3.5-4.3.9-3.3.9-5.3-1.4-3.5-.9-5.4 2.5-2.7 3.5-4.3.9-3.6 2.5-4.8 3.3-.4 5.1-1.1S17.9 2.2 20 2.2z'/%3E%3Ccircle cx='20' cy='20' r='12' fill='none' stroke='%235c0f13' stroke-width='1.3' opacity='.75'/%3E%3Cpath d='M20 11.6l7.3 4.2v8.4L20 28.4l-7.3-4.2v-8.4zM20 11.6l-3.9 6.3h7.8zM16.1 17.9l-3.4 6.3M23.9 17.9l3.4 6.3M16.1 17.9 20 28.4l3.9-10.5M12.7 24.2h14.6' fill='none' stroke='%23f2c3a6' stroke-width='1.15' stroke-linejoin='round' opacity='.9'/%3E%3Cpath d='M10.5 10a13.5 13.5 0 0 1 8-3.9' fill='none' stroke='%23fff' stroke-opacity='.3' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  --orn-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 14'%3E%3Cg fill='%239a7420'%3E%3Cpath fill-rule='evenodd' d='M60 .8 66.2 7 60 13.2 53.8 7zM60 4.2 57.2 7 60 9.8 62.8 7z'/%3E%3Cpath d='M46 7l3.2-2.6L52.4 7l-3.2 2.6zM67.6 7l3.2-2.6L74 7l-3.2 2.6zM2 6.5h40.5L44 7l-1.5.5H2zM118 6.5H77.5L76 7l1.5.5H118z'/%3E%3C/g%3E%3C/svg%3E");
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.25 0 0 0 0 0.11 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --fibers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005 .02' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0 0.15 0 0 0 0.10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
+/* ---------- tokens: dark, "candlelit night" (auto) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #1b1517;
+    --bg-2: #221a1b;
+    --surface: #2b2120;
+    --surface-2: #342826;
+    --line: #43342e;
+    --line-2: #5f4a3c;
+    --ink: #f4ead7;
+    --ink-2: #d6c6aa;
+    --ink-3: #b4a287;
+    --brass: #93bbef;
+    --brass-2: #b3cff5;
+    --on-pri: #16233a;
+    --tint: rgba(147, 187, 239, 0.09);
+    --tint-2: rgba(147, 187, 239, 0.17);
+    --good: #7dcc93;
+    --warn: #f0b35e;
+    --crit: #f4846f;
+    --magic: #cba9f0;
+    --gold: #eec56c;
+    --on-crit: #2a0a05;
+    --track: #3a2e2a;
+    --scrim: rgba(8, 5, 6, 0.62);
+    --hi: inset 0 1px 0 rgba(255, 210, 150, 0.06);
+    --e1: var(--pc-lift-1);
+    --e2: var(--pc-lift-2);
+    --e3: var(--pc-lift-3);
+    --stripe-l: 0.72;
+    --gild: #d9a637;
+    --gild-ink: #eec56c;
+    --wax: #b8473a;
+    --cur-fill: color-mix(in srgb, var(--pc-banner) 9%, var(--surface));
+    --th-page:
+      var(--grain), var(--fibers), radial-gradient(900px 520px at 8% 0, rgba(255, 170, 80, 0.07), transparent 65%),
+      linear-gradient(180deg, color-mix(in srgb, var(--pc-sky) 70%, var(--bg)) 0, var(--bg) 560px);
+    --th-nav: var(--grain), var(--surface-2);
+    --th-side: var(--grain), var(--surface-2);
+    --th-tabsel: var(--surface);
+    --th-c1: var(--pc-dragon);
+    --th-c2: var(--pc-banner);
+    --th-c3: var(--pc-forest);
+    --th-c4: var(--pc-lake);
+    --stone: #b3bccb;
+    --pc-forest: #4f8a5a;
+    --pc-lake: #4f78b0;
+    --pc-dragon: #b8473a;
+    --pc-banner: #d9a637;
+    --pc-stone: #7d8596;
+    --pc-sky: #2e2a48;
+    --pc-tray: #5b4331;
+    --pc-tray-2: #2f2118;
+    --pc-felt: #3d2a31;
+    --pc-cut: #120d0e;
+    --pc-cut-2: #0c0809;
+    --pc-sh: rgba(0, 0, 0, 0.5);
+    --pc-sh-2: rgba(0, 0, 0, 0.7);
+    --pc-ribbon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 26'%3E%3Cpath d='M0 0h12v26l-6-5-6 5z' fill='%23d65a46'/%3E%3Cpath d='M0 0h12v2H0z' fill='%23000' opacity='.3'/%3E%3C/svg%3E");
+    --th-rule: linear-gradient(
+      90deg,
+      transparent,
+      rgba(217, 173, 85, 0.45) 18%,
+      rgba(217, 173, 85, 0.45) 82%,
+      transparent
+    );
+    --seal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23a3302a' d='M20 2.2c2.3 0 3.3 1.7 5.2 2.2s3.8-.3 5.2 1 1 3.3 2.1 4.9 3.1 2.3 3.5 4.2-.9 3.4-.9 5.4 1.4 3.3.9 5.2-2.5 2.6-3.5 4.3-.8 3.7-2.4 4.9-3.4.5-5.1 1.2-2.8 2.6-4.9 2.6-3.1-1.9-4.9-2.5-3.8.3-5.2-1-.8-3.3-1.9-4.9-3.1-2.4-3.5-4.3.9-3.3.9-5.3-1.4-3.5-.9-5.4 2.5-2.7 3.5-4.3.9-3.6 2.5-4.8 3.3-.4 5.1-1.1S17.9 2.2 20 2.2z'/%3E%3Ccircle cx='20' cy='20' r='12' fill='none' stroke='%235e140f' stroke-width='1.3' opacity='.75'/%3E%3Cpath d='M20 11.6l7.3 4.2v8.4L20 28.4l-7.3-4.2v-8.4zM20 11.6l-3.9 6.3h7.8zM16.1 17.9l-3.4 6.3M23.9 17.9l3.4 6.3M16.1 17.9 20 28.4l3.9-10.5M12.7 24.2h14.6' fill='none' stroke='%23ffd2b4' stroke-width='1.15' stroke-linejoin='round' opacity='.9'/%3E%3Cpath d='M10.5 10a13.5 13.5 0 0 1 8-3.9' fill='none' stroke='%23fff' stroke-opacity='.3' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    --orn-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 14'%3E%3Cg fill='%23d9ad55'%3E%3Cpath fill-rule='evenodd' d='M60 .8 66.2 7 60 13.2 53.8 7zM60 4.2 57.2 7 60 9.8 62.8 7z'/%3E%3Cpath d='M46 7l3.2-2.6L52.4 7l-3.2 2.6zM67.6 7l3.2-2.6L74 7l-3.2 2.6zM2 6.5h40.5L44 7l-1.5.5H2zM118 6.5H77.5L76 7l1.5.5H118z'/%3E%3C/g%3E%3C/svg%3E");
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    --fibers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005 .02' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.0 0 0 0 0 0.0 0 0 0 0 0.0 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  }
+}
+/* ---------- tokens: dark, "candlelit night" (forced; copy of the block above) ---------- */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1b1517;
+  --bg-2: #221a1b;
+  --surface: #2b2120;
+  --surface-2: #342826;
+  --line: #43342e;
+  --line-2: #5f4a3c;
+  --ink: #f4ead7;
+  --ink-2: #d6c6aa;
+  --ink-3: #b4a287;
+  --brass: #93bbef;
+  --brass-2: #b3cff5;
+  --on-pri: #16233a;
+  --tint: rgba(147, 187, 239, 0.09);
+  --tint-2: rgba(147, 187, 239, 0.17);
+  --good: #7dcc93;
+  --warn: #f0b35e;
+  --crit: #f4846f;
+  --magic: #cba9f0;
+  --gold: #eec56c;
+  --on-crit: #2a0a05;
+  --track: #3a2e2a;
+  --scrim: rgba(8, 5, 6, 0.62);
+  --hi: inset 0 1px 0 rgba(255, 210, 150, 0.06);
+  --e1: var(--pc-lift-1);
+  --e2: var(--pc-lift-2);
+  --e3: var(--pc-lift-3);
+  --stripe-l: 0.72;
+  --gild: #d9a637;
+  --gild-ink: #eec56c;
+  --wax: #b8473a;
+  --cur-fill: color-mix(in srgb, var(--pc-banner) 9%, var(--surface));
+  --th-page:
+    var(--grain), var(--fibers), radial-gradient(900px 520px at 8% 0, rgba(255, 170, 80, 0.07), transparent 65%),
+    linear-gradient(180deg, color-mix(in srgb, var(--pc-sky) 70%, var(--bg)) 0, var(--bg) 560px);
+  --th-nav: var(--grain), var(--surface-2);
+  --th-side: var(--grain), var(--surface-2);
+  --th-tabsel: var(--surface);
+  --th-c1: var(--pc-dragon);
+  --th-c2: var(--pc-banner);
+  --th-c3: var(--pc-forest);
+  --th-c4: var(--pc-lake);
+  --stone: #b3bccb;
+  --pc-forest: #4f8a5a;
+  --pc-lake: #4f78b0;
+  --pc-dragon: #b8473a;
+  --pc-banner: #d9a637;
+  --pc-stone: #7d8596;
+  --pc-sky: #2e2a48;
+  --pc-tray: #5b4331;
+  --pc-tray-2: #2f2118;
+  --pc-felt: #3d2a31;
+  --pc-cut: #120d0e;
+  --pc-cut-2: #0c0809;
+  --pc-sh: rgba(0, 0, 0, 0.5);
+  --pc-sh-2: rgba(0, 0, 0, 0.7);
+  --pc-ribbon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 26'%3E%3Cpath d='M0 0h12v26l-6-5-6 5z' fill='%23d65a46'/%3E%3Cpath d='M0 0h12v2H0z' fill='%23000' opacity='.3'/%3E%3C/svg%3E");
+  --th-rule: linear-gradient(
+    90deg,
+    transparent,
+    rgba(217, 173, 85, 0.45) 18%,
+    rgba(217, 173, 85, 0.45) 82%,
+    transparent
+  );
+  --seal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23a3302a' d='M20 2.2c2.3 0 3.3 1.7 5.2 2.2s3.8-.3 5.2 1 1 3.3 2.1 4.9 3.1 2.3 3.5 4.2-.9 3.4-.9 5.4 1.4 3.3.9 5.2-2.5 2.6-3.5 4.3-.8 3.7-2.4 4.9-3.4.5-5.1 1.2-2.8 2.6-4.9 2.6-3.1-1.9-4.9-2.5-3.8.3-5.2-1-.8-3.3-1.9-4.9-3.1-2.4-3.5-4.3.9-3.3.9-5.3-1.4-3.5-.9-5.4 2.5-2.7 3.5-4.3.9-3.6 2.5-4.8 3.3-.4 5.1-1.1S17.9 2.2 20 2.2z'/%3E%3Ccircle cx='20' cy='20' r='12' fill='none' stroke='%235e140f' stroke-width='1.3' opacity='.75'/%3E%3Cpath d='M20 11.6l7.3 4.2v8.4L20 28.4l-7.3-4.2v-8.4zM20 11.6l-3.9 6.3h7.8zM16.1 17.9l-3.4 6.3M23.9 17.9l3.4 6.3M16.1 17.9 20 28.4l3.9-10.5M12.7 24.2h14.6' fill='none' stroke='%23ffd2b4' stroke-width='1.15' stroke-linejoin='round' opacity='.9'/%3E%3Cpath d='M10.5 10a13.5 13.5 0 0 1 8-3.9' fill='none' stroke='%23fff' stroke-opacity='.3' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  --orn-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 14'%3E%3Cg fill='%23d9ad55'%3E%3Cpath fill-rule='evenodd' d='M60 .8 66.2 7 60 13.2 53.8 7zM60 4.2 57.2 7 60 9.8 62.8 7z'/%3E%3Cpath d='M46 7l3.2-2.6L52.4 7l-3.2 2.6zM67.6 7l3.2-2.6L74 7l-3.2 2.6zM2 6.5h40.5L44 7l-1.5.5H2zM118 6.5H77.5L76 7l1.5.5H118z'/%3E%3C/g%3E%3C/svg%3E");
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --fibers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.005 .02' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.0 0 0 0 0 0.0 0 0 0 0 0.0 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
+/* ---------- base ---------- */
+:root body {
+  font-family: var(--sans);
+  font-size-adjust: ex-height 0.52;
+  font-feature-settings: 'lnum' 1;
+  letter-spacing: 0;
+}
+:root :is(h1, h2, h3) {
+  letter-spacing: 0;
+}
+:root ::selection {
+  background: color-mix(in srgb, var(--gild) 30%, transparent);
+}
+
+/* display caps (Cinzel): short labels and lone numbers only */
+:root
+  :is(
+    .brand h1,
+    .navb > span,
+    .ph h2,
+    .side .eyebrow,
+    .sessn,
+    .verdict,
+    .dres .tot,
+    .dpre button,
+    .mc .st span,
+    .t th,
+    .chead .ac
+  ) {
+  font-family: var(--display);
+  font-size-adjust: none;
+}
+/* title serif (Alegreya) */
+:root
+  :is(
+    .side h2,
+    .sechead h2,
+    .chead h3,
+    .mhead h3,
+    .item strong,
+    .scenenow b,
+    .brand .sub,
+    .atmos,
+    .readaloud,
+    .mnotes .tac,
+    .cb .tac,
+    .readpop .readbig,
+    .add,
+    div.empty,
+    .mc .ty,
+    .cb.lair .who strong
+  ) {
+  font-family: var(--serif);
+  font-size-adjust: ex-height 0.5;
+}
+/* elements that keep the sans inside serif/display parents */
+:root :is(.dpre button small, .sessn small, .chead .ac b) {
+  font-family: var(--sans);
+  font-size-adjust: ex-height 0.52;
+}
+
+/* ---------- top bar ---------- */
+:root .top {
+  position: relative;
+}
+:root .top::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -7.5px;
+  width: 120px;
+  height: 14px;
+  transform: translateX(-50%);
+  background: var(--orn-rule) center/120px 14px no-repeat;
+  pointer-events: none;
+}
+:root .wrap > .foot {
+  position: relative;
+}
+:root .wrap > .foot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -7.5px;
+  width: 120px;
+  height: 14px;
+  transform: translateX(-50%);
+  background: var(--orn-rule) center/120px 14px no-repeat;
+  pointer-events: none;
+}
+/* the warn-coloured example note sits on the textured page: deepen it so it keeps AA there */
+:root .wrap > .foot .example-note {
+  color: color-mix(in srgb, var(--warn) 72%, var(--ink));
+}
+:root .brand > svg {
+  display: none;
+}
+:root .brand::before {
+  content: '';
+  flex: none;
+  width: 34px;
+  height: 34px;
+  background: var(--seal) center/contain no-repeat;
+  filter: drop-shadow(0 1px 1px rgba(40, 10, 5, 0.35));
+}
+:root .brand h1 {
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.03em;
+}
+:root .brand .sub {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13.5px;
+}
+:root .tools {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+:root .nav {
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px var(--pc-cut),
+    0 2px 0 var(--pc-cut-2);
+}
+:root .navb {
+  color: var(--ink-2);
+  border-radius: 7px;
+}
+:root .navb > span {
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: 0.04em;
+}
+:root .navb small {
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- buttons ---------- */
+/* primitives use :where() so the specificity equals the original selectors: ve-css is last, so it wins
+   over the generic rules but still loses to contextual ones (segmented rows, ghost buttons, D2 flat items) */
+:where(:root) .btn {
+  border-radius: var(--r-sm);
+  font-weight: 600;
+  font-size: 13.5px;
+  background: var(--surface);
+  border: 1px solid var(--pc-cut-2);
+  box-shadow: var(--pc-press);
+  transition:
+    translate 0.08s,
+    box-shadow 0.08s,
+    background 0.15s;
+}
+:where(:root) .btn.sm {
+  border-radius: var(--r-sm);
+}
+:where(:root) .btn.ghost {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+:where(:root) .btn:where(:not(.ghost, .pri)):hover {
+  background: color-mix(in srgb, var(--pc-banner) 8%, var(--surface));
+  border-color: var(--pc-cut-2);
+}
+:where(:root) .btn.pri {
+  background: var(--brass);
+  border-color: color-mix(in srgb, var(--brass) 70%, #000);
+  color: var(--on-pri);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--brass) 55%, #000);
+}
+:where(:root) .btn.pri:hover {
+  background: var(--brass-2);
+  border-color: color-mix(in srgb, var(--brass) 70%, #000);
+}
+:where(:root) .btn:active {
+  translate: 0 2px;
+  box-shadow: 0 0 0 var(--pc-cut-2);
+}
+:where(:root) .btn.ghost:active {
+  translate: none;
+}
+:root :is(.step, .stepper button, .quick button, .x, .rmb) {
+  border-radius: 6px;
+}
+
+/* ---------- party cards ---------- */
+:root .card {
+  background: var(--pc-paper), var(--surface);
+  border: 1px solid var(--pc-cut);
+  border-radius: 10px;
+  box-shadow: var(--pc-lift-2);
+}
+:root .card.down {
+  background:
+    linear-gradient(225deg, var(--bg) 0 50%, color-mix(in srgb, var(--ink) 14%, var(--surface-2)) 50%) right top/20px
+      20px no-repeat,
+    var(--pc-paper),
+    color-mix(in srgb, var(--crit) 4%, var(--surface));
+}
+:root .card.down::before {
+  right: 19px;
+  border-top-right-radius: 0;
+}
+/* low HP: a static red ribbon on the seat (was the fx-lowhp pulse) */
+:root :is(#party > .card, .card):not(.down):has(.bar > i.low:not([style*='width:0%'])) {
+  background:
+    var(--pc-ribbon) right 14px top -1px/10px 18px no-repeat,
+    var(--pc-paper),
+    var(--surface);
+}
+:root .card.away {
+  border-style: dashed;
+}
+:root .card::before {
+  left: -1px;
+  right: -1px;
+  top: -1px;
+  height: 5px;
+  border-radius: 10px 10px 0 0;
+}
+:root .chead h3 {
+  font-weight: 700;
+  font-size: 17px;
+}
+:root .chead .ac {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+:root .chead .ac b {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+:root .hprow .v b {
+  font-weight: 700;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+:root .card.down .chead h3 {
+  color: var(--ink-2);
+}
+:root .add {
+  border: 1.5px dashed var(--pc-cut-2);
+  background: color-mix(in srgb, var(--surface) 45%, transparent);
+  border-radius: 10px;
+  font-style: italic;
+  font-size: 15px;
+}
+:root .add:hover {
+  color: var(--brass);
+  border-style: solid;
+  background: var(--tint);
+}
+
+/* ---------- HP bars ---------- */
+:root .bar {
+  height: 7px;
+  border-radius: 2px;
+  background: var(--track);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-cut-2) 60%, transparent);
+}
+:root .bar i {
+  background: var(--good);
+}
+:root .bar i.mid {
+  background: var(--warn);
+}
+:root .bar i.low {
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0 2px, transparent 2px 5px), var(--crit);
+}
+
+/* ---------- pills ---------- */
+:where(:root) .pill {
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+:root .pill.cd {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent);
+}
+/* concentration: a static stitched outline (was the fx-conc shimmer) */
+:root :is(.pill.cd[data-c='Concentrating'], .pill.cd[data-fx='conc']) {
+  box-shadow: inset 0 0 0 1px var(--magic);
+  outline: 1px dashed color-mix(in srgb, var(--magic) 60%, transparent);
+  outline-offset: 1px;
+}
+:where(:root) .pill.bl::before {
+  border-radius: 1px;
+  transform: rotate(45deg);
+  width: 6px;
+  height: 6px;
+  top: 7px;
+}
+:where(:root) .pill.dn::before {
+  width: 8px;
+  height: 8px;
+  top: 6px;
+  left: 1px;
+  border-radius: 0;
+  clip-path: polygon(
+    20% 0,
+    50% 30%,
+    80% 0,
+    100% 20%,
+    70% 50%,
+    100% 80%,
+    80% 100%,
+    50% 70%,
+    20% 100%,
+    0 80%,
+    30% 50%,
+    0 20%
+  );
+}
+:root .mchip {
+  border-radius: 4px;
+}
+:root .pip {
+  border-color: var(--magic);
+}
+:root .pip.on {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--magic) 30%, transparent);
+}
+
+/* ---------- DM seat ---------- */
+:root .ph h2 {
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+}
+:root .sessn {
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 0;
+}
+:root .sessn small {
+  letter-spacing: 0;
+}
+:root .scenenow {
+  background: var(--bg-2);
+  border-left: 0;
+  box-shadow:
+    inset 4px 0 0 var(--pc-banner),
+    inset 0 0 0 1px var(--pc-cut);
+}
+:root .scenenow b {
+  font-weight: 700;
+  font-size: 15px;
+}
+:root :is(.clock .row, .lightadd, .restrow) {
+  border-radius: 7px;
+  box-shadow: 0 2px 0 var(--pc-cut-2);
+}
+:root :is(.clock .row, .lightadd, .restrow) .btn {
+  box-shadow: none;
+  translate: none;
+}
+:root .light > i {
+  background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 60%, #fff));
+}
+:root .light.low > i {
+  background: var(--crit);
+}
+
+/* setup checklist and the live-battle strip: card stock; the live strip carries a red ribbon */
+:root :is(.gs, .tstate.is-live) {
+  background: var(--pc-paper), var(--surface);
+  border: 1px solid var(--pc-cut);
+  box-shadow: var(--pc-lift-2);
+}
+:root .tstate.is-live {
+  border-left: 0;
+  position: relative;
+  padding-left: 26px;
+}
+:root .tstate.is-live::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: -1px;
+  width: 10px;
+  height: 24px;
+  background: var(--pc-ribbon) center/100% 100% no-repeat;
+}
+
+/* ---------- section heads (titles: Alegreya, no drop cap) ---------- */
+:root .sechead h2 {
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- sheet ---------- */
+:root .sheet {
+  background: var(--pc-paper), var(--bg-2);
+  border: 1px solid var(--pc-cut);
+  border-radius: var(--r-lg);
+  box-shadow: var(--pc-stack), var(--pc-lift-3);
+}
+:root .side {
+  background: var(--th-side);
+  box-shadow: inset -1px 0 0 var(--pc-cut);
+}
+:root .side h2 {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+:root .side .eyebrow {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--brass);
+}
+:where(:root) .tab {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ink-2);
+  border-radius: 6px;
+}
+:root .tab[aria-selected='true'] {
+  color: var(--ink);
+}
+:root :is(.tab[aria-selected='true'], .vo-tabmark) {
+  background: var(--th-tabsel);
+  box-shadow:
+    0 0 0 1px var(--pc-cut),
+    0 2px 0 var(--pc-cut-2),
+    inset 4px 0 0 var(--brass);
+}
+:root .side.vo-sliding .tab[aria-selected='true'] {
+  background: transparent;
+  box-shadow: none;
+}
+:root .tab .dot {
+  background: var(--crit);
+}
+:root .mhead h3 {
+  font-weight: 700;
+  font-size: 21px;
+}
+:root .mhead p {
+  color: var(--ink-3);
+}
+:where(:root) :is(.box, .tw) {
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--pc-cut);
+  box-shadow: 0 2px 0 var(--pc-cut-2);
+}
+:where(:root) .item strong {
+  font-weight: 700;
+  font-size: 15px;
+}
+:where(:root) .t th {
+  background: var(--surface-2);
+  border-bottom: 2px solid var(--pc-cut-2);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+:where(:root) div.empty {
+  font-style: italic;
+}
+:root div.empty::before {
+  content: '';
+  display: block;
+  width: 120px;
+  max-width: 100%;
+  height: 14px;
+  margin: 0 auto 10px;
+  background: var(--orn-rule) center/contain no-repeat;
+  opacity: 0.7;
+}
+:where(:root)
+  :is(
+    input[type='text'],
+    input[type='number'],
+    input[type='date'],
+    input[type='search'],
+    input[type='time'],
+    select,
+    textarea
+  ) {
+  border-radius: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--pc-cut-2);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--pc-cut-2) 70%, transparent);
+}
+:where(:root) :is(input, select, textarea):focus {
+  outline: 2px solid var(--brass);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+
+/* serif italic prose (one px larger than the original) */
+:root :is(.atmos, .readaloud, .mnotes .tac, .cb .tac) {
+  font-style: italic;
+}
+:root .atmos {
+  font-size: 16px;
+}
+:root .mnotes .tac {
+  font-size: 14px;
+}
+
+/* ---------- battle tracker ---------- */
+:root .rbar {
+  background: transparent;
+}
+:root .rbar .r {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+:root .rbar .r em {
+  color: var(--brass);
+}
+:root .ttimer {
+  font-variant-numeric: tabular-nums;
+}
+:root .turns {
+  border: 1px solid var(--pc-cut);
+  border-radius: 10px;
+  background: var(--pc-paper), var(--surface);
+  box-shadow: var(--pc-lift-2);
+}
+:root .cb {
+  border-top: 1px solid var(--line);
+}
+@media (hover: hover) {
+  :root .cb:not(.cur):hover {
+    background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+  }
+}
+:root :is(.cb.cur, .pk.on) {
+  background: var(--cur-fill);
+}
+/* current turn: a paper strip pulled out of the list, with a bookmark ribbon */
+:root .turns > .cb.cur {
+  z-index: 2;
+  box-shadow:
+    0 0 0 1px var(--pc-cut-2),
+    0 3px 0 var(--pc-cut-2),
+    0 10px 14px -10px var(--pc-sh-2);
+}
+:root .cb.cur::before {
+  left: 8px;
+  top: -1px;
+  bottom: auto;
+  width: 12px;
+  height: 30px;
+  background: var(--brass);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+}
+:root .turns.vo-moving > .cb.cur {
+  background: transparent;
+  box-shadow: none;
+}
+:root .cb .ini {
+  font-weight: 700;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+:root .cb.cur .ini {
+  color: var(--brass);
+}
+:root .cb .who strong {
+  font-weight: 700;
+  font-size: 14.5px;
+}
+:root .cb.pc .who strong::after {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--good);
+}
+:root .cb.lair .who strong {
+  font-style: italic;
+  color: var(--magic);
+}
+:root .cb.down .who :is(strong, .mlink) {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--crit) 60%, transparent);
+  text-decoration-thickness: 1.5px;
+}
+:root :is(.ds button.f, .ds .f button) {
+  border-radius: 2px;
+}
+:root .leg .lp button {
+  color: var(--gold);
+}
+:root .log {
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+/* ---------- monster card and small popups ---------- */
+:root .mc {
+  background: var(--pc-paper), var(--bg-2);
+  border: 1px solid var(--pc-cut);
+  border-radius: var(--r-lg);
+  box-shadow: var(--pc-stack), var(--pc-lift-3);
+  padding: 22px;
+}
+:root .mc .mhead h3 {
+  font-weight: 700;
+  font-size: 22px;
+}
+:root .mc:has(> .st) .mhead h3::first-letter {
+  font-family: var(--display);
+  font-size: 1.3em;
+  color: var(--gild-ink);
+  font-size-adjust: none;
+}
+:root .mc .ty {
+  font-style: italic;
+  color: var(--ink-3);
+}
+:root .mc .st {
+  background: none;
+  border: 0;
+  gap: 6px;
+  overflow: visible;
+  border-radius: 6px;
+}
+:root .mc .st div {
+  background: var(--surface);
+  border: 1px solid var(--pc-cut);
+  border-radius: 6px;
+  box-shadow: 0 2px 0 var(--pc-cut-2);
+}
+:root .mc .st span {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+:root .mc .st b {
+  font-weight: 700;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+:root :is(.mc .atk, .mnotes) {
+  border-top: 0;
+  background: linear-gradient(var(--pc-cut-2), var(--pc-cut-2)) top left/100% 1px no-repeat;
+}
+:root .mc .atk .hit {
+  color: var(--brass);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+:root .verdict {
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.02em;
+}
+:root .readpop .readbig {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.65;
+}
+:root .readpop .readbig::first-letter {
+  float: left;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 3.1em;
+  line-height: 0.9;
+  margin: 0.06em 0.08em 0 0;
+  color: var(--gild-ink);
+  font-size-adjust: none;
+}
+:root .hothumb {
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  box-shadow: var(--e1);
+}
+
+/* ---------- dice ---------- */
+:root .dpre button {
+  position: relative;
+  isolation: isolate;
+  background: var(--surface);
+  border: 1px solid var(--pc-cut-2);
+  border-radius: 8px;
+  padding: 10px 0 7px;
+  box-shadow: 0 3px 0 var(--pc-cut-2);
+  transition:
+    translate 0.08s,
+    box-shadow 0.08s;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+:root .dpre button small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0;
+}
+:root .dpre button::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  z-index: -1;
+  background: var(--ink-3);
+  opacity: 0.1;
+  -webkit-mask: var(--die) center/contain no-repeat;
+  mask: var(--die) center/contain no-repeat;
+  pointer-events: none;
+}
+:root .dpre button:hover {
+  border-color: var(--brass);
+  background: var(--surface);
+}
+:root .dpre button:hover::before {
+  opacity: 0.2;
+}
+:root .dpre button:active {
+  translate: 0 3px;
+  box-shadow: 0 0 0 var(--pc-cut-2);
+}
+:root .dpre [data-face='4'] {
+  --die: var(--mask-d4);
+}
+:root .dpre [data-face='6'] {
+  --die: var(--mask-d6);
+}
+:root .dpre [data-face='8'] {
+  --die: var(--mask-d8);
+}
+:root .dpre [data-face='10'] {
+  --die: var(--mask-d10);
+}
+:root .dpre [data-face='12'] {
+  --die: var(--mask-d12);
+}
+:root .dpre [data-face='20'] {
+  --die: var(--mask-d20);
+}
+:root .dpre [data-face='100'] {
+  --die: var(--mask-d100);
+}
+:root .dres {
+  background: linear-gradient(var(--pc-sh), transparent 10px), var(--pc-felt);
+  border: 8px solid var(--pc-tray);
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 1px var(--pc-tray-2),
+    0 4px 0 var(--pc-tray-2);
+}
+:root .dres .tot {
+  font-weight: 700;
+  font-size: 48px;
+  letter-spacing: 0;
+}
+:root :is(.dres .lbl, .dres .bd) {
+  color: var(--ink-3);
+}
+:root .dres.n20 {
+  border-color: var(--pc-banner);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--pc-banner) 60%, #000),
+    0 4px 0 color-mix(in srgb, var(--pc-banner) 60%, #000);
+}
+:root .dres.n20.spinning {
+  animation: pc-pop 0.5s var(--ease-pop) both;
+  animation-delay: var(--t, 0ms);
+}
+:root .dres.n1 {
+  border-color: var(--pc-dragon);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--pc-dragon) 60%, #000),
+    0 4px 0 color-mix(in srgb, var(--pc-dragon) 60%, #000);
+}
+:root .reel .win {
+  background: var(--surface);
+  border: 1px solid var(--pc-cut);
+  border-radius: 6px;
+}
+:root .reel .strip span {
+  font-weight: 700;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+:root .dres.n20 .reel .win {
+  background: color-mix(in srgb, var(--pc-banner) 22%, var(--surface));
+}
+:root .dres.n1 .reel .win {
+  background:
+    linear-gradient(225deg, var(--pc-felt) 0 50%, color-mix(in srgb, var(--ink) 14%, var(--surface-2)) 50%) right
+      top/22px 22px no-repeat,
+    var(--surface);
+}
+:root .seg {
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--pc-cut);
+}
+:root .seg button[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow:
+    0 0 0 1px var(--pc-cut-2),
+    0 2px 0 var(--pc-cut-2);
+}
+
+/* ---------- map and tokens (never var(--r) in here: .map sets --r = rows) ---------- */
+:root .map {
+  border: 8px solid var(--pc-tray);
+  border-radius: 14px;
+  background-color: var(--pc-felt);
+  box-shadow:
+    0 0 0 1px var(--pc-tray-2),
+    0 4px 0 var(--pc-tray-2);
+}
+:root .map:not([style*='background-image']) {
+  background-image: var(--grain);
+  background-size: 220px;
+  background-repeat: repeat;
+}
+:root .map:not([style*='background-image'])::before {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: min(72px, 18%);
+  aspect-ratio: 1;
+  background: var(--ink);
+  opacity: 0.16;
+  -webkit-mask: var(--mask-compass) center/contain no-repeat;
+  mask: var(--mask-compass) center/contain no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+:root .tok {
+  background: color-mix(in srgb, var(--crit) 18%, var(--surface));
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size-adjust: none;
+}
+:root .tok.pc {
+  background: color-mix(in srgb, var(--good) 18%, var(--surface));
+}
+:root .tok.cur {
+  box-shadow:
+    0 0 0 3px var(--brass),
+    0 2px 0 3px rgba(0, 0, 0, 0.25);
+}
+:root .map.ro .tok {
+  cursor: default;
+}
+
+/* ---------- toasts ---------- */
+:root .toast {
+  background: var(--pc-paper), var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--pc-cut);
+  box-shadow: var(--pc-lift-3);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+}
+:root .toast::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 8px 0 -2px;
+  border-radius: 50%;
+  vertical-align: -1px;
+  background: var(--pc-dragon);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  animation: ve-seal 0.28s var(--ease-pop, var(--ease)) both;
+}
+
+/* ---------- motion ---------- */
+@keyframes ve-seal {
+  from {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes pc-pop {
+  0% {
+    scale: 0.98;
+  }
+  45% {
+    scale: 1.025;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root :is(.toast::before, .dres.n20.spinning) {
+    animation: none;
+  }
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 720px) {
+  :root .navb {
+    padding: 6px 6px;
+    gap: 4px;
+  }
+  :root .navb > span {
+    font-size: 12px;
+    letter-spacing: 0.01em;
+  }
+}
+@media (max-width: 420px) {
+  :root :is(.top, .wrap > .foot)::after {
+    display: none;
+  }
+}
+@media print {
+  :root :is(.sheet, .mc, .dres, .side, .card, .turns) {
+    background: none;
+  }
+}
+/* ---------- spacing and contrast refinements ---------- */
+:root div.empty :is(button, .btn, a) {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size-adjust: ex-height 0.52;
+}
+:root .map[style*='background-image'] .tok:not(.cur) {
+  box-shadow:
+    0 0 0 1.5px var(--surface),
+    0 1px 3px rgba(0, 0, 0, 0.45);
+}
+@media (min-width: 721px) {
+  :root .top {
+    column-gap: 12px;
+  }
+  :root .navb {
+    padding-inline: 11px;
+  }
+}
+@media (min-width: 721px) and (max-width: 800px) {
+  :root .navb {
+    padding-inline: 9px;
+  }
+}
+@media (max-width: 380px) {
+  :root .navb {
+    padding: 6px 4px;
+    gap: 3px;
+  }
+}
+
+/* ==== data safety ==== */
+/* New pieces reuse .safebar, .savewarn, .btn, .lnk, .sfrow and .box; only layout lives here. */
+.savewarn .sfbtns {
+  display: inline-flex;
+  margin: 6px 0 0 8px;
+  vertical-align: middle;
+}
+.safebar .sfbtns {
+  flex-wrap: wrap;
+}
+#saveState .lnk {
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+#saveState[data-state='hold'] .lnk,
+#saveState[data-state='stale'] .lnk,
+#saveState[data-state='full'] .lnk,
+#saveState[data-state='blocked'] .lnk,
+#saveState[data-state='failed'] .lnk {
+  color: var(--crit);
+  font-weight: 600;
+}
+#recOpts .sfwhat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+#recOpts .sfwhat small {
+  white-space: normal;
+}
+#remindBox select {
+  max-width: 10em;
+}
+.ddbsteps {
+  margin: 0;
+  padding-left: 1.4em;
+  display: grid;
+  gap: 8px;
+}
+.ddbsteps input[type='text'] {
+  width: 100%;
+  max-width: 28em;
+}
+.ddbsteps li:focus {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}

@@ -1,0 +1,739 @@
+/* Around-the-table home layout (DM screen, seats) and the paper-cut diorama table art. */
+
+/* ==== tbl-css: table layout ==== */
+/* ===== Around the table: home layout ===== */
+/* tokens */
+:root {
+  --tbl-wood: #a3774a;
+  --tbl-wood-2: #86603a;
+  --tbl-wood-hi: #c49766;
+  --tbl-edge: #5e3f22;
+  --tbl-inlay: #f3e8cf;
+  --tbl-shadow: rgba(60, 35, 10, 0.38);
+  --tbl-hinge: #9a7420;
+  --tbl-hinge-2: #e2c27a;
+  /* DM screen and the Time & light header: the same cardboard as the table tray */
+  --tbl-leaf: var(--pc-tray);
+  --tbl-leaf-2: var(--pc-tray-2);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --tbl-wood: #3d2918;
+    --tbl-wood-2: #29190d;
+    --tbl-wood-hi: #5c3f26;
+    --tbl-edge: #140b05;
+    --tbl-inlay: #221a11;
+    --tbl-shadow: rgba(0, 0, 0, 0.6);
+    --tbl-hinge: #8a6a2a;
+    --tbl-hinge-2: #d9ad55;
+  }
+}
+
+/* 1. scene grid: DM screen (row 1) above the party column (row 2) */
+:root .home > .side-col {
+  grid-row: 1;
+  grid-column: 1;
+  position: relative;
+  z-index: 3;
+  width: min(100%, 1040px);
+  justify-self: center;
+  margin-top: 6px;
+}
+/* the DM's own high-backed chair peeks above the screen (mirrors the players' chairs) */
+:root .home > .side-col::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  translate: -50% 0;
+  width: min(200px, 28%);
+  height: 26px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 14px 14px 0 0;
+  background: var(--pc-tray);
+  box-shadow:
+    inset 0 0 0 1px var(--pc-tray-2),
+    0 -1px 0 var(--pc-tray-2);
+}
+:root .home > .partycol {
+  grid-row: 2;
+  grid-column: 1;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'table' 'seats' 'setup';
+}
+
+/* 2. the table: a decorative grid item that shares the "table" cell with .sechead */
+:root .partycol::before {
+  content: '';
+  grid-area: table;
+  padding: 14px 14px 26px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 20px 20px 10px 10px;
+  background:
+    var(--tbl-candle) left 22px top 46px/24px 62px no-repeat,
+    var(--tbl-candle) right 22px top 46px/24px 62px no-repeat,
+    var(--tbl-dice) left 52px bottom 34px/48px 26px no-repeat,
+    linear-gradient(var(--tbl-inlay), var(--tbl-inlay)) 14px 14px / calc(100% - 28px) calc(100% - 40px) no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gild) 55%, transparent), color-mix(in srgb, var(--gild) 55%, transparent))
+      12px 12px / calc(100% - 24px) calc(100% - 36px) no-repeat,
+    linear-gradient(180deg, var(--tbl-wood-hi), var(--tbl-edge) 70%) bottom/100% 12px no-repeat,
+    repeating-linear-gradient(177deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(181deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 13px),
+    linear-gradient(180deg, var(--tbl-wood), var(--tbl-wood-2));
+  box-shadow:
+    0 22px 34px -20px var(--tbl-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+/* a battle is live: the map gives way to a battle grid */
+:root .partycol:has(.tstate.is-live)::before {
+  background:
+    var(--tbl-candle) left 22px top 46px/24px 62px no-repeat,
+    var(--tbl-candle) right 22px top 46px/24px 62px no-repeat,
+    var(--tbl-dice) left 52px bottom 34px/48px 26px no-repeat,
+    var(--tbl-grid) 0 0/28px 28px content-box content-box,
+    linear-gradient(var(--tbl-inlay), var(--tbl-inlay)) 14px 14px / calc(100% - 28px) calc(100% - 40px) no-repeat,
+    linear-gradient(color-mix(in srgb, var(--crit) 45%, transparent), color-mix(in srgb, var(--crit) 45%, transparent))
+      12px 12px / calc(100% - 24px) calc(100% - 36px) no-repeat,
+    linear-gradient(180deg, var(--tbl-wood-hi), var(--tbl-edge) 70%) bottom/100% 12px no-repeat,
+    repeating-linear-gradient(177deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(181deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 13px),
+    linear-gradient(180deg, var(--tbl-wood), var(--tbl-wood-2));
+}
+
+/* text on the table */
+/* summary on the table: ink-2 (keeps >=5:1 under the fx candle pool and map strokes) */
+:root .partycol > .sechead > #tstate:not(.is-live) {
+  color: var(--ink-2);
+}
+/* table overlay slot, exactly over the table (geometry only); the diorama section below paints the mountains in it. */
+:root .partycol::after {
+  content: '';
+  grid-area: table;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 20px 20px 10px 10px;
+  opacity: 0;
+}
+
+/* 3. seats */
+:root .partycol > #party {
+  grid-area: seats;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 26px 14px;
+  padding: 0 6px;
+}
+:root #party > :is(.card, .add) {
+  flex: 1 1 250px;
+  max-width: 300px;
+  min-width: 0;
+}
+:root #party > .card {
+  box-shadow: var(--pc-lift-2);
+}
+/* chair back peeking out behind each seat (away from the table) */
+:root #party > :is(.card, .add)::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  width: 42%;
+  height: 10px;
+  translate: -50% 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 0 0 10px 10px;
+  background: var(--pc-tray);
+  box-shadow: 0 2px 0 var(--pc-tray-2);
+}
+:root #party > .add {
+  position: relative;
+}
+:root #party > .add::after {
+  background: none;
+  border: 1.5px dashed color-mix(in srgb, var(--gild) 55%, var(--line-2));
+  border-top: 0;
+  box-shadow: none;
+}
+:root #party > .card.away {
+  translate: 0 6px;
+}
+:root #party > .card.away::after {
+  background: none;
+  border: 1.5px dashed var(--line-2);
+  border-top: 0;
+  box-shadow: none;
+}
+:root #party > .card.down::after {
+  background: color-mix(in srgb, var(--pc-dragon) 45%, var(--pc-tray));
+}
+
+/* 4. getting started: below the seats */
+:root .partycol > #setupSeat {
+  grid-area: setup;
+  margin-top: 34px;
+}
+:root .partycol > #setupSeat:empty {
+  display: none;
+}
+:root #setupSeat > .gs {
+  margin-top: 0;
+}
+
+/* 5. DM screen: three hinged leaves */
+:root #dmSeat {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  display: grid;
+  gap: 0 14px;
+  align-items: stretch;
+}
+:root #dmSeat > .panel {
+  position: relative;
+  margin: 0;
+  padding: 14px 16px 16px;
+  border: 7px solid transparent;
+  border-radius: 12px;
+  background-image:
+    linear-gradient(var(--surface), var(--surface)), none, linear-gradient(var(--tbl-leaf), var(--tbl-leaf));
+  background-clip: padding-box, border-box, border-box;
+  background-origin: padding-box, border-box, border-box;
+  box-shadow:
+    inset 0 0 0 1px var(--tbl-leaf-2),
+    0 0 0 1px var(--tbl-leaf-2),
+    0 5px 0 var(--tbl-leaf-2),
+    0 18px 26px -14px var(--pc-sh-2);
+}
+/* hinges in the gap between leaves */
+:root #dmSeat > .panel + .panel::before,
+:root #dmSeat > .panel + .panel::after {
+  content: '';
+  position: absolute;
+  left: -18px;
+  width: 8px;
+  height: 24px;
+  border-radius: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--tbl-hinge), var(--tbl-hinge-2) 45%, var(--tbl-hinge));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+:root #dmSeat > .panel + .panel::before {
+  top: 18px;
+}
+:root #dmSeat > .panel + .panel::after {
+  bottom: 18px;
+}
+
+/* tablet: two-leaf screen (Session | Time over Delve) */
+@media (min-width: 768px) and (max-width: 1099px) {
+  :root .home > .side-col {
+    width: calc(100% - 48px);
+  }
+  :root #dmSeat {
+    gap: 12px 14px;
+  }
+  :root .partycol > .sechead {
+    padding-inline: 104px;
+  }
+}
+/* phone: the screen folds out sideways */
+@media (max-width: 767px) {
+  :root .home > .side-col {
+    width: 100%;
+  }
+  :root #dmSeat > .panel {
+    scroll-snap-align: start;
+    border-width: 6px;
+  }
+  :root .partycol::before {
+    padding: 10px 10px 22px;
+    background:
+      linear-gradient(var(--tbl-inlay), var(--tbl-inlay)) 10px 10px / calc(100% - 20px) calc(100% - 32px) no-repeat,
+      linear-gradient(
+          color-mix(in srgb, var(--gild) 55%, transparent),
+          color-mix(in srgb, var(--gild) 55%, transparent)
+        )
+        9px 9px / calc(100% - 18px) calc(100% - 30px) no-repeat,
+      linear-gradient(180deg, var(--tbl-wood-hi), var(--tbl-edge) 70%) bottom/100% 10px no-repeat,
+      repeating-linear-gradient(181deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 13px),
+      linear-gradient(180deg, var(--tbl-wood), var(--tbl-wood-2));
+  }
+  :root .partycol:has(.tstate.is-live)::before {
+    background:
+      var(--tbl-grid) 0 0/28px 28px content-box content-box,
+      linear-gradient(var(--tbl-inlay), var(--tbl-inlay)) 10px 10px / calc(100% - 20px) calc(100% - 32px) no-repeat,
+      linear-gradient(
+          color-mix(in srgb, var(--crit) 45%, transparent),
+          color-mix(in srgb, var(--crit) 45%, transparent)
+        )
+        9px 9px / calc(100% - 18px) calc(100% - 30px) no-repeat,
+      linear-gradient(180deg, var(--tbl-wood-hi), var(--tbl-edge) 70%) bottom/100% 10px no-repeat,
+      linear-gradient(180deg, var(--tbl-wood), var(--tbl-wood-2));
+  }
+  :root .home > .side-col::before {
+    top: -12px;
+    height: 20px;
+    width: 120px;
+  }
+  :root #dmSeat {
+    overscroll-behavior-x: contain;
+    padding: 2px 2px 16px;
+    scrollbar-width: thin;
+    scroll-padding-inline: 2px;
+  }
+  :root .partycol > #party {
+    padding: 0 4px;
+  }
+  :root #party > :is(.card, .add) {
+    flex-basis: 260px;
+    max-width: none;
+  }
+}
+@media print {
+  :root .partycol::before,
+  :root .partycol::after,
+  :root .home > .side-col::before,
+  :root #party > *::after,
+  :root #dmSeat > .panel::before,
+  :root #dmSeat > .panel::after {
+    display: none;
+  }
+}
+/* ===== Table: text off the table, battle scene on it ===== */
+/* 1. No text on the table. The heading and the summary stay for screen readers. .sechead stays as the empty box
+   that sizes the table (tableRect() and the .partycol::after candle slot are unchanged); it now carries the minis. */
+:root .home > .partycol {
+  position: static;
+}
+:root .partycol > .sechead {
+  grid-area: table;
+  z-index: 2;
+  margin: 0;
+  align-self: end;
+  position: static;
+  padding: 0;
+  pointer-events: none;
+}
+:root .partycol > .sechead > h2,
+:root .partycol > .sechead > #tstate:not(.is-live) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* 2. The live-battle banner (same element, same Open battle button) moves off the table, above the DM screen */
+:root .home {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  row-gap: 0;
+  position: relative;
+  isolation: isolate;
+  --ta-live-h: 50px;
+}
+:root .partycol > .sechead > #tstate.is-live {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: min(100%, 1040px);
+  height: var(--ta-live-h);
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+  padding-block: 0;
+  overflow: hidden;
+  pointer-events: auto;
+}
+:root #tstate.is-live > :is(b, span:not(.live)) {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:root #tstate.is-live > :is(.live, .btn) {
+  flex: none;
+}
+:root .home:has(#tstate.is-live) > .side-col {
+  margin-top: calc(var(--ta-live-h) + 30px);
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  :root .partycol > .sechead > #tstate.is-live {
+    width: calc(100% - 48px);
+  }
+}
+@media (max-width: 767px) {
+  :root .home {
+    --ta-live-h: 62px;
+  }
+  :root .partycol > .sechead > #tstate.is-live {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'lv nm bt' 'rd rd bt';
+    align-content: center;
+    gap: 2px 8px;
+    padding-inline: 12px;
+  }
+  :root #tstate.is-live > .live {
+    grid-area: lv;
+  }
+  :root #tstate.is-live > b {
+    grid-area: nm;
+  }
+  :root #tstate.is-live > span:not(.live) {
+    grid-area: rd;
+  }
+  :root #tstate.is-live > .btn {
+    grid-area: bt;
+    margin: 0;
+  }
+}
+/* ===== /Table artist ===== */
+/* ===== Table geometry: DM screen off the table, terrain layers, seats off the table ===== */
+:root {
+  --d5-br: brightness(1);
+  --d5-gw: rgba(60, 120, 176, 0.45);
+  --d5-gf: rgba(79, 125, 58, 0.45);
+  --d5-gm: rgba(110, 108, 102, 0.4);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --d5-br: brightness(1.45);
+    --d5-gw: rgba(96, 172, 255, 0.5);
+    --d5-gf: rgba(112, 190, 92, 0.45);
+    --d5-gm: rgba(205, 205, 200, 0.35);
+  }
+}
+:root[data-theme='dark'] {
+  --tbl-wood: #3d2918;
+  --tbl-wood-2: #29190d;
+  --tbl-wood-hi: #5c3f26;
+  --tbl-edge: #140b05;
+  --tbl-inlay: #221a11;
+  --tbl-shadow: rgba(0, 0, 0, 0.6);
+  --tbl-hinge: #8a6a2a;
+  --tbl-hinge-2: #d9ad55;
+  --d5-br: brightness(1.45);
+  --d5-gw: rgba(96, 172, 255, 0.5);
+  --d5-gf: rgba(112, 190, 92, 0.45);
+  --d5-gm: rgba(205, 205, 200, 0.35);
+}
+/* geometry: one set of numbers shared by the table, its candle slot, .sechead and the map layers.
+   --d5-m table overhang, --d5-h table height, --d5-g gap to the screen and to the seats, --d5-t/s/b inlay insets */
+:root .home > .partycol {
+  --d5-m: -12px;
+  --d5-h: 360px;
+  --d5-g: 34px;
+  --d5-t: 14px;
+  --d5-s: 14px;
+  --d5-b: 26px;
+  padding-top: var(--d5-g);
+}
+@media (min-width: 1100px) {
+  :root .home > .partycol {
+    --d5-m: min(-16px, calc((100% - min(100vw - 48px, 1380px)) / 2));
+  }
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  :root .home > .partycol {
+    --d5-h: 300px;
+    --d5-g: 30px;
+  }
+}
+@media (max-width: 767px) {
+  :root .home > .partycol {
+    --d5-h: 222px;
+    --d5-g: 22px;
+    --d5-t: 10px;
+    --d5-s: 10px;
+    --d5-b: 22px;
+    padding-top: calc(var(--d5-g) - 16px);
+  }
+}
+/* the table starts below the DM screen */
+:root .partycol::before,
+:root .partycol::after {
+  margin-top: 0;
+  margin-inline: var(--d5-m);
+}
+:root .partycol > .sechead {
+  margin-inline: var(--d5-m);
+  min-height: var(--d5-h);
+  display: grid;
+  grid-template: 1fr/1fr;
+  background: none;
+}
+/* terrain layers (each its own glow colour and rhythm): water on .sechead::after; forest and mountains on #party::before/::after,
+   lifted over the inlay. #party drops to z 1 so they paint under .sechead (z 2), whose ::before carries the minis. */
+:root .partycol > .sechead::before,
+:root .partycol > .sechead::after {
+  content: '';
+  grid-area: 1/1;
+  place-self: stretch;
+  pointer-events: none;
+}
+:root .partycol > .sechead > #tstate.is-live {
+  z-index: 2;
+}
+:root .partycol > #party {
+  z-index: 1;
+  margin-top: var(--d5-g);
+}
+:root .partycol > #party::before,
+:root .partycol > #party::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--d5-m) + var(--d5-s));
+  right: calc(var(--d5-m) + var(--d5-s));
+  bottom: calc(100% + var(--d5-g) + var(--d5-b));
+  height: calc(var(--d5-h) - var(--d5-t) - var(--d5-b));
+  pointer-events: none;
+}
+:root .partycol > .sechead::after {
+  z-index: 0;
+  filter: var(--d5-br) drop-shadow(0 0 2.5px var(--d5-gw));
+}
+:root .partycol > #party::before {
+  filter: var(--d5-br) drop-shadow(0 0 2.5px var(--d5-gf));
+}
+:root .partycol > #party::after {
+  filter: var(--d5-br) drop-shadow(0 0 2px var(--d5-gm));
+}
+/* still: Effects off, reduced motion; paused with the tab; dimmed (no glow) while a battle is live so the grid reads */
+:root.fx-off .partycol > :is(.sechead, #party)::after,
+:root.fx-off .partycol > #party::before {
+  animation: none;
+  filter: var(--d5-br);
+  opacity: 0.5;
+}
+:root.fx-rm .partycol > :is(.sechead, #party)::after,
+:root.fx-rm .partycol > #party::before {
+  animation: none;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root .partycol > :is(.sechead, #party)::after,
+  :root .partycol > #party::before {
+    animation: none;
+    opacity: 0.55;
+  }
+}
+:root .partycol:has(.tstate.is-live) > :is(.sechead, #party)::after,
+:root .partycol:has(.tstate.is-live) > #party::before {
+  animation: none;
+  filter: var(--d5-br);
+  opacity: 0.28;
+}
+:root .partycol:has(.tstate.is-live) > .sechead {
+  background-image: none;
+}
+@media print {
+  :root .partycol > #party::before,
+  :root .partycol > #party::after,
+  :root .partycol > .sechead::before,
+  :root .partycol > .sechead::after {
+    display: none;
+  }
+}
+/* ===== /Table geometry ===== */
+
+/* ==== opt-css: paper-cut diorama ==== */
+/* ===== Paper-cut diorama: the table art (overrides the table rules above) ===== */
+:root {
+  --Ecb: #d2ad78;
+  --Ec2: #a8804d;
+  --Efe: #efe3c8;
+  --Esk: #cfe7f2;
+  --Ewl: #60421a42;
+  --Els: #462d0f66;
+  --Etn: brightness(1);
+  --Erm: #0000;
+  --Egc: #50381c57;
+  --Emtn: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>.s{filter:url(%23s)}%3C/style><defs><filter id='s' y='-.15' height='1.4'><feDropShadow dy='1.8' stdDeviation='1.3' flood-color='%233b281261'/></filter><symbol id='m' viewBox='0 0 160 80'><path d='M10 80 66 6l58 74z' fill='%23aab3c2'/><path d='M66 6 52 25l6-2 4 5 5-6 5 5 6-2z' fill='%23f7f3ea'/><g class='s'><path d='M60 80l50-58 50 58z' fill='%238791a3'/><path d='M110 22 98 36l5-2 4 4 4-5 5 4 5-1z' fill='%23f2eee6'/></g><g class='s'><path d='M0 80l34-40 36 40z' fill='%239aa3b3'/><path d='M34 40l-8 10 4-1 4 3 4-3 4 1z' fill='%23f7f3ea'/></g></symbol><symbol id='o' viewBox='0 0 34 16'><path d='M3 15a5 5 0 0 1 4-7 7 7 0 0 1 13-4 6 6 0 0 1 10 5 4 4 0 0 1 1 6z' fill='%23fdfaf2'/></symbol></defs><use href='%23m' y='16%25' width='22%25' height='34%25'/><use href='%23m' x='23%25' width='28%25' height='50%25'/><use href='%23m' x='54%25' y='8%25' width='24%25' height='42%25'/><g class='s'><use href='%23o' x='2%25' y='2%25' width='8%25' height='13%25'/><use href='%23o' x='70%25' y='6%25' width='6%25' height='10%25'/></g></svg>");
+  --Ehil: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100' preserveAspectRatio='none'><filter id='s' y='-.3' height='1.6'><feDropShadow dy='-1.4' stdDeviation='1.2' flood-color='%233b28124d'/></filter><g filter='url(%23s)'><path d='M0 44C60 34 120 38 190 46S330 38 420 44 560 50 640 42s170-6 230 2 100 2 130-4v60H0z' fill='%23ecd294'/><path d='M0 60c70-10 150-6 230 2s170-4 250-6 160 10 240 6 200-10 280-4v42H0z' fill='%23b8c46a'/><path d='M0 74c90-8 170 2 260 0s190-8 280-4 170 6 250 2 160-6 210-2v30H0z' fill='%239fbf5e'/><path d='M0 88c80-5 180 2 270-1s200-3 290 0 200 3 280 0 110-1 160 1v12H0z' fill='%23f5ebcd'/></g></svg>");
+  --Efor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><style>.s{filter:url(%23s)}@media (max-height:132px){.x{display:none}}%3C/style><defs><filter id='s' y='-.15' height='1.4'><feDropShadow dy='1.8' stdDeviation='1.3' flood-color='%233b281261'/></filter><symbol id='t' viewBox='0 0 120 76'><path d='M10 26a10 10 0 0 1 18-8a12 12 0 0 1 22-4a12 12 0 0 1 22 0a12 12 0 0 1 22 4a10 10 0 0 1 18 8q7 12-5 24H15q-12-12-5-24z' fill='%232f7a4c' class='s x'/><path d='M2 40a10 10 0 0 1 18-8a12 12 0 0 1 22-4a12 12 0 0 1 22 0a12 12 0 0 1 22 4a10 10 0 0 1 18 8q7 11-5 22H7q-12-11-5-22z' fill='%2345a159' class='s'/><path d='M14 54a10 10 0 0 1 18-8a12 12 0 0 1 22-4a12 12 0 0 1 22 0a12 12 0 0 1 22 4a10 10 0 0 1 18 8q7 9-5 18H19q-12-9-5-18z' fill='%2374c46c' class='s'/><path d='M30 72h3v4h-3zM60 72h3v4h-3zM90 72h3v4h-3z' fill='%237a5233'/></symbol></defs><use href='%23t' x='-6%25' y='20%25' width='20%25' height='70%25'/><use href='%23t' x='85%25' y='18%25' width='22%25' height='74%25'/></svg>");
+  --Ewat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cfilter id='s' y='-.15' height='1.4'%3E%3CfeDropShadow dy='1.8' stdDeviation='1.3' flood-color='%233b281261'/%3E%3C/filter%3E%3Csymbol id='r' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cg fill='none'%3E%3Cpath d='M86 0C70 26 18 30 30 56S38 86 24 104' stroke='%234ea3db' stroke-width='9'/%3E%3Cpath d='M86 0C70 26 18 30 30 56S38 86 24 104' stroke='%239fd6f2' stroke-width='2' stroke-dasharray='10 14'/%3E%3C/g%3E%3C/symbol%3E%3C/defs%3E%3Cg filter='url(%23s)'%3E%3Cuse href='%23r' x='47%25' y='50%25' width='14%25' height='52%25'/%3E%3C/g%3E%3C/svg%3E");
+  --Esc: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.s%7Bfilter:url(%23s)%7D@media (max-height:132px)%7B.d%7Bdisplay:none%7D%7D@media (min-height:133px)%7B.p%7Bdisplay:none%7D%7D%3C/style%3E%3Cdefs%3E%3Cfilter id='s' y='-.15' height='1.4'%3E%3CfeDropShadow dy='1.8' stdDeviation='1.3' flood-color='%233b281261'/%3E%3C/filter%3E%3Cg id='h'%3E%3Cpath d='M15.5 34v14m6-14v14m14-14v14m6-14v14' stroke='%237a4a28' stroke-width='3'/%3E%3Cpath d='M10 24c-5 1-7 7-6 12 2-3 4-5 6-6zM44 9l3-3 3 4-2 1z' fill='%235b3720'/%3E%3Cpath d='M10 26c0-5 4-8 9-8h18l7-9c2-2 6-2 8 1l2 4-2 2-4-1-3 4v13c0 4-3 6-6 6H16c-4 0-6-3-6-6z' fill='%23b0703e'/%3E%3Cpath d='M11 24h30v12q-15 6-30 0z' fill='%233f6fb8'/%3E%3Cpath d='M11 24h30v3H11z' fill='%23f2b829'/%3E%3Cpath d='M20 20 22 6h9l2 14z' fill='%23335d9e'/%3E%3Cpath d='M22 6V-1a4.5 4.5 0 0 1 9 0v7zM50-4l6-6-1 8z' fill='%23cdd5e0'/%3E%3Cpath d='M26 1h5v1.8h-5z' fill='%233a3f4a'/%3E%3Cpath d='M18 26 52-6' stroke='%238a5a34' stroke-width='1.8'/%3E%3C/g%3E%3Cg id='k'%3E%3Cpath d='M8 44V33h3v11zM13 44V33h3v11z' fill='%237d8796'/%3E%3Cpath d='M6 34 8 18h8l2 16z' fill='%233f6fb8'/%3E%3Cpath d='M7 18V11a5 5 0 0 1 10 0v7zM4 0l2 5H2z' fill='%23cdd5e0'/%3E%3Cpath d='M12 13h5v1.8h-5z' fill='%233a3f4a'/%3E%3Cpath d='M4 4v40' stroke='%238a5a34' stroke-width='1.6'/%3E%3Cpath d='M15 21h7v6c0 4-3.5 6-3.5 6S15 31 15 27z' fill='%23f4f1ea'/%3E%3Cpath d='M18.5 22v9m-3-5.3h6.6' stroke='%233f6fb8' stroke-width='1.4'/%3E%3C/g%3E%3Cg id='g'%3E%3Cpath d='M4 26c0-8 3-12 8-12s8 4 8 12z' fill='%2386b83a'/%3E%3Cpath d='M5 22h14v3H5z' fill='%237a4f2c'/%3E%3Cpath d='M7 9 0 5l6 8zM17 9l6-4-5 8z' fill='%236f9e2c'/%3E%3Ccircle cx='12' cy='10' r='6' fill='%2386b83a'/%3E%3Cpath d='M9.5 9.5h0m4 0h0' stroke='%23ffe066' stroke-width='2.8' stroke-linecap='round'/%3E%3Cpath d='M8 13.5h4' stroke='%233e5a18'/%3E%3C/g%3E%3Csymbol id='c' viewBox='0 0 120 110'%3E%3Cpath d='M0 110C8 82 30 74 60 72s52 10 60 38z' fill='%238fc65e'/%3E%3Cpath d='M40 84V34h6v-6h6v6h5v-6h6v6h5v-6h6v6h6v50z' fill='%23ece3d1' class='s'/%3E%3Cg class='s'%3E%3Cpath d='M22 86V42h18v44zM80 86V42h18v44z' fill='%23f6efe1'/%3E%3Cpath d='M18 43 31 16l13 27zM76 43l13-27 13 27z' fill='%234b74b0'/%3E%3C/g%3E%3Cpath d='M53 86V73a7 7 0 0 1 14 0v13z' fill='%236c5440'/%3E%3Cpath d='M58 46h4v8h-4zM29 52h4v7h-4zM87 52h4v7h-4z' fill='%235a6b86'/%3E%3C/symbol%3E%3Csymbol id='w' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cg fill='none'%3E%3Cpath d='M0 0C10 60 60 40 100 100' stroke='%23c9a66e' stroke-width='9'/%3E%3Cpath d='M0 0C10 60 60 40 100 100' stroke='%23f0dcae' stroke-width='6'/%3E%3C/g%3E%3C/symbol%3E%3Csymbol id='b' viewBox='0 0 44 20'%3E%3Cpath d='M0 20C4 6 16 2 22 2s18 4 22 18h-9c-2-6-7-9-13-9S11 14 9 20z' fill='%23d9cdb4'/%3E%3Cpath d='M3 11q19-14 38 0' fill='none' stroke='%23a8977a' stroke-width='1.6'/%3E%3C/symbol%3E%3Csymbol id='n' viewBox='-4 -12 112 66'%3E%3Cpath d='M-2 52c2-5 30-7 54-7s52 2 54 7-26 6-54 6-56-1-54-6z' fill='%23f6eedc'/%3E%3Cg class='s'%3E%3Cuse href='%23h'/%3E%3Cpath d='M64-8v52' stroke='%236b4426' stroke-width='1.8'/%3E%3Cpath d='M64-8h22l-5 7 5 7H64z' fill='%23f2b829'/%3E%3Ccircle cx='72' cy='-1' r='2.6' fill='%233f6fb8'/%3E%3Cuse href='%23k' x='58' y='7'/%3E%3Cuse href='%23k' x='80' y='7'/%3E%3C/g%3E%3C/symbol%3E%3Csymbol id='p' viewBox='0 0 130 56'%3E%3Cpath d='M2 52c2-6 28-8 62-8s62 2 64 8-30 4-64 4-64 0-62-4z' fill='%23f6eedc'/%3E%3Cg class='s'%3E%3Cpath d='M88 50q14-20 20-37l18 37z' fill='%23c79a5b'/%3E%3Cpath d='M108 13l-5 37h11z' fill='%235e4128'/%3E%3Cpath d='M114 30l6 2-2 6-6-2z' fill='%23a37a45'/%3E%3Cpath d='M108 13l-4-6m4 6 3-6M10 36 4 28m30 0-6-14' stroke='%236b4426' stroke-width='1.5'/%3E%3Cpath d='M50 48l16-5m-16 0 16 5' stroke='%236b4426' stroke-width='3' stroke-linecap='round'/%3E%3Cuse href='%23g' x='14' y='22'/%3E%3Cuse href='%23g' x='33' y='18'/%3E%3Cuse href='%23g' x='71' y='18'/%3E%3Cuse href='%23g' transform='matrix(-.85 0 0 .85 92 16)'/%3E%3C/g%3E%3C/symbol%3E%3Csymbol id='x' viewBox='0 0 64 36'%3E%3Cpath d='M17 2l14 8v16l-14 8-14-8V10z' fill='%235aa0d8'/%3E%3Cpath d='M10 14h14l-7 12zM3 10l7 4 7-12 7 12 7-4M10 14 3 26h28l-7-12M17 26v8' fill='none' stroke='%23cfe7f7' stroke-width='1.3' stroke-linejoin='round'/%3E%3Cg transform='rotate(12 49 20)'%3E%3Crect x='39' y='10' width='20' height='20' rx='4' fill='%23fbf6ea'/%3E%3Cpath d='M44 15h0m5 5h0m5 5h0' stroke='%233a2f28' stroke-width='3.6' stroke-linecap='round'/%3E%3C/g%3E%3C/symbol%3E%3Csymbol id='N' viewBox='-2 -12 70 60'%3E%3Cellipse cx='33' cy='44' rx='35' ry='4.5' fill='%23f6eedc'/%3E%3Cg class='s'%3E%3Cuse href='%23k'/%3E%3Cuse href='%23k' x='22' y='2'/%3E%3Cuse href='%23k' x='44'/%3E%3C/g%3E%3C/symbol%3E%3Csymbol id='G' viewBox='-2 -2 82 34'%3E%3Cellipse cx='40' cy='28' rx='41' ry='4' fill='%23f6eedc'/%3E%3Cg class='s'%3E%3Cuse href='%23g'/%3E%3Cuse href='%23g' x='19' y='2'/%3E%3Cuse href='%23g' x='38'/%3E%3Cuse href='%23g' x='57' y='2'/%3E%3C/g%3E%3C/symbol%3E%3C/defs%3E%3Cuse href='%23w' x='19.5%25' y='57%25' width='31%25' height='22%25'/%3E%3Cg class='s'%3E%3Cuse href='%23c' x='10%25' y='12%25' width='18%25' height='58%25'/%3E%3Cuse href='%23b' x='48.6%25' y='70%25' width='6%25' height='13%25'/%3E%3Cuse href='%23n' x='29%25' y='50%25' width='22%25' height='44%25'/%3E%3Cuse href='%23p' x='60%25' y='54%25' width='24%25' height='40%25'/%3E%3Cuse href='%23x' x='1%25' y='80%25' width='8%25' height='18%25' class='d'/%3E%3Cuse href='%23N' x='27.5%25' y='20%25' width='9%25' height='34%25'/%3E%3Cuse href='%23N' x='13%25' y='62%25' width='9%25' height='34%25' class='d'/%3E%3Cuse href='%23G' x='72%25' y='24%25' width='16%25' height='26%25'/%3E%3Cuse href='%23G' x='85%25' y='68%25' width='11%25' height='24%25' class='d'/%3E%3C/g%3E%3C/svg%3E");
+  --Ean: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.s%7Bfilter:url(%23s)%7D@media (max-height:132px)%7B.d%7Bdisplay:none%7D%7D%3C/style%3E%3Cdefs%3E%3Cfilter id='s' y='-.15' height='1.4'%3E%3CfeDropShadow dy='1.8' stdDeviation='1.3' flood-color='%233b281261'/%3E%3C/filter%3E%3Csymbol id='P' viewBox='0 0 120 110'%3E%3Cpath d='M60 28V8' stroke='%236b4426' stroke-width='1.4'/%3E%3Cpath d='M60.5 8h15l-4 4 4 4h-15z' fill='%23f2b829'/%3E%3C/symbol%3E%3Csymbol id='F' viewBox='0 0 130 56'%3E%3Ccircle cx='58' cy='40' r='10' fill='%23ffb347' opacity='.3'/%3E%3Cg%3E%3Cpath d='M58 46c-6 0-8-5-5-10 1 3 3 3 3 1-1-4 1-8 5-10-1 4 3 6 4 10 1 5-2 9-7 9z' fill='%23ff8a2a'/%3E%3Cpath d='M58 46c-3 0-4-3-2-6 1 2 2 1 2 0 0-2 1-4 2-5 0 3 2 4 2 6 0 3-2 5-4 5z' fill='%23ffd84a'/%3E%3C/g%3E%3C/symbol%3E%3C/defs%3E%3Cuse href='%23P' x='10%25' y='12%25' width='18%25' height='58%25'/%3E%3Cuse href='%23F' x='60%25' y='54%25' width='24%25' height='40%25'/%3E%3C/svg%3E");
+  --Ean2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.s%7Bfilter:url(%23s)%7D@media (max-height:132px)%7B.d%7Bdisplay:none%7D%7D%3C/style%3E%3Cdefs%3E%3Cfilter id='s' y='-.15' height='1.4'%3E%3CfeDropShadow dy='1.8' stdDeviation='1.3' flood-color='%233b281261'/%3E%3C/filter%3E%3Csymbol id='P' viewBox='0 0 120 110'%3E%3Cpath d='M60 28V8' stroke='%236b4426' stroke-width='1.4'/%3E%3Cpath d='M60.5 8h15l-4 4 4 4h-15z' fill='%23f2b829'/%3E%3C/symbol%3E%3Csymbol id='F' viewBox='0 0 130 56'%3E%3Ccircle cx='58' cy='40' r='10' fill='%23ffb347' opacity='.75'/%3E%3Cg transform='translate(58 46) scale(.86 1.12) translate(-58 -46)'%3E%3Cpath d='M58 46c-6 0-8-5-5-10 1 3 3 3 3 1-1-4 1-8 5-10-1 4 3 6 4 10 1 5-2 9-7 9z' fill='%23ff8a2a'/%3E%3Cpath d='M58 46c-3 0-4-3-2-6 1 2 2 1 2 0 0-2 1-4 2-5 0 3 2 4 2 6 0 3-2 5-4 5z' fill='%23ffd84a'/%3E%3C/g%3E%3C/symbol%3E%3C/defs%3E%3Cuse href='%23P' x='10%25' y='12%25' width='18%25' height='58%25'/%3E%3Cuse href='%23F' x='60%25' y='54%25' width='24%25' height='40%25'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --Ecb: #5b4331;
+    --Ec2: #2f2118;
+    --Efe: #3d2a31;
+    --Esk: #2e2a48;
+    --Ewl: #0008;
+    --Els: #0009;
+    --Etn: brightness(0.8) saturate(0.82) sepia(0.12);
+    --Erm: #ffba6e6b;
+    --Egc: #f4debe3d;
+  }
+}
+:root[data-theme='dark'] {
+  --Ecb: #5b4331;
+  --Ec2: #2f2118;
+  --Efe: #3d2a31;
+  --Esk: #2e2a48;
+  --Ewl: #0008;
+  --Els: #0009;
+  --Etn: brightness(0.8) saturate(0.82) sepia(0.12);
+  --Erm: #ffba6e6b;
+  --Egc: #f4debe3d;
+}
+.partycol:not(#o) {
+  --Ebw: 12px;
+  --Er: 22px;
+  --d5-h: 216px;
+  --d5-t: var(--Ebw);
+  --d5-s: var(--Ebw);
+  --d5-b: var(--Ebw);
+  --Eg: #0000;
+  --Ew: #0000;
+  --Ex: 100%;
+  --Ey: 0px;
+  --Eo: 1;
+  --Et: 0.9s;
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  .partycol:not(#o) {
+    --d5-h: 180px;
+  }
+}
+@media (max-width: 767px) {
+  .partycol:not(#o) {
+    --Ebw: 8px;
+    --Er: 16px;
+    --d5-h: 134px;
+    --Ex: 125%;
+  }
+}
+.partycol:not(#o)::before {
+  transform: none;
+  padding: 0;
+  border: var(--Ebw) solid var(--Ecb);
+  border-radius: var(--Er);
+  background:
+    linear-gradient(var(--Ewl), #0000 10px), linear-gradient(90deg, var(--Ewl), #0000 8px calc(100% - 8px), var(--Ewl)),
+    linear-gradient(var(--Esk) 22%, var(--Efe) 52%);
+  box-shadow:
+    0 0 0 1px var(--Ec2),
+    0 5px 0 var(--Ec2),
+    0 18px 26px -14px #321e0a8c;
+}
+.partycol:not(#o)::after,
+.partycol:not(#o) > :is(#party, .sechead:not(#o))::before,
+.partycol:not(#o) > :is(#party, .sechead:not(#o))::after {
+  transform: none;
+  border-radius: calc(var(--Er) - var(--Ebw));
+  opacity: var(--Eo);
+  transition: opacity 0.6s;
+  filter: var(--Etn) drop-shadow(0 -1px 0 var(--Erm)) drop-shadow(0 0 0 var(--Els)) !important;
+}
+.partycol:not(#o)::after {
+  margin: var(--Ebw) calc(var(--d5-m) + var(--Ebw));
+  background: var(--Emtn);
+}
+.partycol:not(#o) > #party::before {
+  background: var(--Ehil);
+}
+.partycol:not(#o) > #party::after {
+  background: var(--Efor);
+}
+.partycol:not(#o) > .sechead:not(#o)::after {
+  margin: var(--Ebw);
+  background: var(--Ewat) 50% / var(--Ex) 100% no-repeat;
+}
+.partycol:not(#o) > .sechead:not(#o)::before {
+  margin: var(--Ebw);
+  z-index: 1;
+  --Eo: 1;
+  transition: background-size var(--Et);
+  background:
+    linear-gradient(90deg, var(--Eg) 1px, #0000 0) -1px 0/28px 28px,
+    linear-gradient(var(--Eg) 1px, #0000 0) 0 -1px/28px 28px,
+    linear-gradient(var(--Ew), var(--Ew)),
+    var(--Ean) 50% 0 / var(--Ex) calc(100% + var(--Ey)) no-repeat,
+    var(--Esc) 50% 0 / var(--Ex) 100% no-repeat;
+}
+/* campfire flicker: two static frames of the table art (--Ean, --Ean2) swapped a few times a second. Only with
+   Effects on, full motion, no live battle, and nothing covering the table. (v2 animated inside the SVG image, which
+   re-rasterised the filtered layer on every frame.) */
+@keyframes Efire {
+  0%,
+  45%,
+  62%,
+  100% {
+    background-image:
+      linear-gradient(90deg, var(--Eg) 1px, #0000 0), linear-gradient(var(--Eg) 1px, #0000 0),
+      linear-gradient(var(--Ew), var(--Ew)), var(--Ean), var(--Esc);
+  }
+  28%,
+  52%,
+  80% {
+    background-image:
+      linear-gradient(90deg, var(--Eg) 1px, #0000 0), linear-gradient(var(--Eg) 1px, #0000 0),
+      linear-gradient(var(--Ew), var(--Ew)), var(--Ean2), var(--Esc);
+  }
+}
+:root:not(.fx-off, .fx-rm, .fx-hold, .fx-paused)
+  .partycol:not(#o):not(:has(.tstate.is-live))
+  > .sechead:not(#o)::before {
+  animation: Efire 2.6s steps(1, end) infinite;
+}
+.partycol:not(#o):has(.tstate.is-live) {
+  --Eg: var(--Egc);
+  --Ew: color-mix(in srgb, var(--Efe) 74%, #0000);
+  --Ex: 150%;
+  --Ey: 1px;
+  --Eo: 0.34;
+}
+.partycol:not(#o):has(.tstate.is-live)::before {
+  border-color: color-mix(in srgb, var(--pc-dragon) 32%, var(--Ecb));
+}
+/* static diorama: nothing moves but the campfire (Efire above) */
+:root:is(.fx-off, .fx-rm) .partycol:not(#o) {
+  --Ey: 1px;
+  --Et: 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .partycol:not(#o) {
+    --Ey: 1px;
+    --Et: 0s;
+  }
+}
+
+/* Time and Dungeon turn panels are hidden on the home screen (they open in the Time & light drawer). The DM screen is a single centred leaf. */
+:root #dmSeat > .panel:nth-child(2),
+:root #dmSeat > .panel:nth-child(3) {
+  display: none !important;
+}
+:root #dmSeat {
+  grid-auto-flow: row !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-auto-columns: auto !important;
+  width: min(520px, 100%);
+  margin-inline: auto !important;
+  overflow: visible !important;
+  scroll-snap-type: none !important;
+}
+:root #dmSeat > .panel:first-child {
+  padding-top: 14px;
+  grid-row: auto !important;
+}
